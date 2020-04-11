@@ -139,7 +139,6 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\AccueilController.cs" />
     <Compile Include="Controllers\ApiController.cs" />
-    <Compile Include="Controllers\Invocateur_newOldController.cs" />
     <Compile Include="Controllers\InvocateurController.cs" />
     <Compile Include="Data\Api.cs" />
     <Compile Include="Global.asax.cs">
