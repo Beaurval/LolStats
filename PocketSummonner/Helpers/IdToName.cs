@@ -68,6 +68,7 @@ namespace PocketSummonner.Helpers
         public async static Task<Item> GetItem(int? idItem)
         {
             Item item = new Item();
+            item.Image = "https://upload.wikimedia.org/wikipedia/commons/5/5f/Grey.PNG";
             if (idItem.HasValue && idItem != 0)
             {
                 HttpClient client = new HttpClient();
@@ -82,7 +83,6 @@ namespace PocketSummonner.Helpers
                     JObject dataItems = (JObject)jsonItems["data"];
                     foreach (JProperty prop in dataItems.Properties())
                     {
-
                         if (prop.Name == idItem.ToString())
                         {
                             item.Description = prop.Value["description"].ToString();

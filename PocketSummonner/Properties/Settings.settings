@@ -3,7 +3,7 @@
   <Profiles />
   <Settings>
     <Setting Name="api_key" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">RGAPI-ad346e92-426f-4506-8018-eb23aa0245b4</Value>
+      <Value Profile="(Default)">RGAPI-7321e3e5-4aa6-406f-bee2-12253fb63332</Value>
     </Setting>
   </Settings>
 </SettingsFile>
