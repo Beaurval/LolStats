@@ -1,0 +1,92 @@
+﻿@using PocketSummonner.Models.Profil
+@model List<GameHistory>
+@{
+    ViewBag.Title = "Profil de l'invocateur";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
+<link href="~/Content/profil.css" rel="stylesheet" />
+<div style="background-color: beige; height: 100vh;">
+    <div class="container-fluid" id="mainContainer">
+        <div class="container">
+            <div class="row pt-5">
+                <div class="imgProfile">
+                    <img src="http://ddragon.leagueoflegends.com/cdn/10.5.1/img/profileicon/3898.png" alt="Alternate Text" />
+                    <span class="level">61</span>
+                </div>
+
+                <div class="col-4 playerInfo">
+                    <p class="playerName">Zorvan <span class="text-secondary">EUW1</span></p>
+                    <p class="rank">Diamand II</p>
+                </div>
+            </div>
+        </div>
+        <div class="container statsContainer">
+            @foreach (GameHistory game in Model)
+            {
+                <div class="col-xl-8 col-mb-12 gameHistory @(game.Victory?"victory":"defeat") pt-3 ">
+                    <div class="historyHeader">
+                        <span>@game.TypeGame</span>
+                        <span>@(Math.Round(game.Duration / (double)60,0))min</span>
+                        <span>@game.HistoryDate.ToShortDateString()</span>
+                    </div>
+                    <div class="history">
+                        <img style="margin: auto 0 auto 10px; display: block;" height="100" width="100" src="@game.ImgChampion" alt="Alternate Text" />
+                        <div class="spells">
+                            <img height="50" width="50" src="@game.ImgSpell1" /><img height="50" width="50" src="@game.ImgSpell2" />
+                        </div>
+                        <div class="items">
+                            <div class="line">
+                                <img width="40" src="@game.Items[0].Image" alt="" />
+                                <img width="40" src="@game.Items[1].Image" alt="" />
+                                <img width="40" src="@game.Items[2].Image" alt="" />
+                            </div>
+                            <div class="line">
+                                <img width="40" src="@game.Items[3].Image" alt="" />
+                                <img width="40" src="@game.Items[4].Image" alt="" />
+                                <img width="40" src="@game.Items[5].Image" alt="" />
+                            </div>
+                        </div>
+                        <div class="score">
+                            <div class="kda">
+                                <span><strong class="text-success">@game.Kills</strong> / <strong class="text-danger">@game.Deaths</strong> / <strong class="text-primary">@game.Assists</strong></span>
+                            </div>
+
+                            <div class="creeps">
+                                <span>
+                                    <strong class="text-warning">LVL @game.Level</strong> / <strong class="text-secondary">@game.Creeps CS</strong>
+                                    @*<img width="30" height="25" src="http://ddragon.leagueoflegends.com/cdn/5.5.1/img/ui/minion.png" alt="Alternate Text" />*@
+                                </span>
+                            </div>
+
+                            <div class="kdaPrct">
+                                <span class="text-secondary">@game.KDA KDA</span>
+                            </div>
+
+                        </div>
+                        <div class="players">
+                            <div class="team">
+                                @foreach (Player pl in game.Players.Where(x => x.idTeam == 100))
+                                {
+                                    <div>
+                                        <img src="@pl.ImageChampion" alt="Alternate Text" />
+                                        <span>@pl.Name</span>
+                                    </div>
+                                }
+                            </div>
+                            <div class="team">
+                                @foreach (Player pl in game.Players.Where(x => x.idTeam == 200))
+                                {
+                                    <div>
+                                        <img src="@pl.ImageChampion" alt="Alternate Text" />
+                                        <span>@pl.Name</span>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
