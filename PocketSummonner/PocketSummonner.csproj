@@ -145,6 +145,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Helpers\IdToName.cs" />
+    <Compile Include="Models\BDD\Invocateur.cs" />
     <Compile Include="Models\InvocateurModel.cs" />
     <Compile Include="Models\Profil\GameHistory.cs" />
     <Compile Include="Models\Profil\Item.cs" />
