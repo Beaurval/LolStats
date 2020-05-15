@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json.Linq;
+using PocketSummonner.Models.BDD;
 using PocketSummonner.Models.Profil;
 using System;
 using System.Collections.Generic;
@@ -65,9 +66,9 @@ namespace PocketSummonner.Helpers
             return spellName;
         }
 
-        public async static Task<Item> GetItem(int? idItem)
+        public async static Task<Equipement> GetItem(int? idItem)
         {
-            Item item = new Item();
+            Equipement item = new Equipement();
             item.Image = "https://upload.wikimedia.org/wikipedia/commons/5/5f/Grey.PNG";
             if (idItem.HasValue && idItem != 0)
             {
@@ -87,14 +88,14 @@ namespace PocketSummonner.Helpers
                         {
                             item.Description = prop.Value["description"].ToString();
                             item.Image = "http://ddragon.leagueoflegends.com/cdn/10.6.1/img/item/" + idItem.ToString() + ".png";
-                            item.Name = prop.Value["name"].ToString();
+                            item.Nom = prop.Value["name"].ToString();
                         }
                     }
                 }
                 else
                 {
                     item.Image = "https://upload.wikimedia.org/wikipedia/commons/5/5f/Grey.PNG";
-                    item.Name = "";
+                    item.Nom = "";
                     item.Description = "";
                 }
 
@@ -103,7 +104,7 @@ namespace PocketSummonner.Helpers
             {
 
                 item.Image = "https://upload.wikimedia.org/wikipedia/commons/5/5f/Grey.PNG";
-                item.Name = "";
+                item.Nom = "";
                 item.Description = "";
             }
 

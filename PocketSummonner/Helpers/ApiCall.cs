@@ -7,6 +7,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web;
+using System.Web.UI.WebControls.WebParts;
 
 namespace PocketSummonner.Helpers
 {
@@ -31,9 +32,9 @@ namespace PocketSummonner.Helpers
                 return new JObject();
         }
 
-        public async static Task<List<GameHistory>> GetGameHistory(string accountId)
+        public async static Task<List<Partie>> GetGameHistory(string accountId)
         {
-            List<GameHistory> history = new List<GameHistory>();
+            List<Partie> history = new List<Partie>();
             HttpClient client = new HttpClient();
             client.DefaultRequestHeaders.Add("X-Riot-Token", api_key);
 
@@ -53,71 +54,90 @@ namespace PocketSummonner.Helpers
                     if (responseMatch.IsSuccessStatusCode)
                     {
                         JObject jsonMatch = JObject.Parse(contentMatch);
-                        GameHistory game = new GameHistory();
-                        game.Players = new List<Player>();
-                        game.Items = new List<Item>();
+                        Partie partie = new Partie();
 
-                        game.HistoryDate = UnixTimeStampToDateTime(Double.Parse(jsonMatch["gameCreation"].ToString()) / 1000);
-                        game.Duration = Int32.Parse(jsonMatch["gameDuration"].ToString());
-                        game.TypeGame = jsonMatch["gameMode"].ToString();
+                        //Liste des joueurs
+                        partie.AutreJoueurs = new List<Joueur>();
+
+                        //Joueur du profil
+                        partie.Joueur = new Joueur();
+                        partie.Joueur.Equipements = new List<Equipement>();
+
+                        partie.DatePartie = UnixTimeStampToDateTime(Double.Parse(jsonMatch["gameCreation"].ToString()) / 1000);
+                        partie.Duree = Int32.Parse(jsonMatch["gameDuration"].ToString());
+                        partie.TypePartie = jsonMatch["gameMode"].ToString();
 
                         //Récupération des identités des joueurs de la game
                         foreach (JObject playersIdentities in (JArray)jsonMatch["participantIdentities"])
                         {
-                            Player pl = new Player();
+                            Joueur j = new Joueur();
+                            Invocateur invocateurJoueur
+                                = new Invocateur
+                                {
+                                    Id = playersIdentities["player"]["summonerId"].ToString(),
+                                    Name = playersIdentities["player"]["summonerName"].ToString(),
+                                    AccountId = playersIdentities["player"]["accountId"].ToString(),
+                                };
 
-                            pl.Name = playersIdentities["player"]["summonerName"].ToString();
-                            pl.idSummoner = playersIdentities["player"]["accountId"].ToString();
-                            pl.idParticipant = Int32.Parse(playersIdentities["participantId"].ToString());
-                            if (pl.idSummoner == accountId)
-                                game.idParticipantPrincial = pl.idParticipant;
-                            game.Players.Add(pl);
+                            j.IdParticipant = Int32.Parse(playersIdentities["participantId"].ToString());
+                            j.Invocateur = invocateurJoueur;
+
+                            if (j.Invocateur.AccountId == accountId)
+                                partie.Joueur = j;
+                            partie.AutreJoueurs.Add(j);
                         }
 
                         //Récupération des stats invocateur principal et teams
                         foreach (JObject playersStats in (JArray)jsonMatch["participants"])
                         {
                             int idParticipant = Int32.Parse(playersStats["participantId"].ToString());
-                            string nameChampion = await Helpers.IdToName.GetChampionName(Int32.Parse(playersStats["championId"].ToString()));
+                            string nomChampion = await Helpers.IdToName.GetChampionName(Int32.Parse(playersStats["championId"].ToString()));
+                            Champion champion = new Champion
+                            {
+                                Id = Int32.Parse(playersStats["championId"].ToString()),
+                                Nom = nomChampion,
+                                Image = "http://ddragon.leagueoflegends.com/cdn/10.6.1/img/champion/"
+                                + nomChampion + ".png"
+                            };
+
                             //Récup des infos du participant
-                            Player pl = game.Players.Where(x => x.idParticipant == idParticipant).First();
-                            pl.idTeam = Int32.Parse(playersStats["teamId"].ToString());
-                            pl.ImageChampion = "http://ddragon.leagueoflegends.com/cdn/10.6.1/img/champion/"
-                                + nameChampion + ".png";
+                            Joueur j = partie.AutreJoueurs.Where(x => x.IdParticipant == idParticipant).First();
+                            j.Equipe = new Equipe { Id = Int32.Parse(playersStats["teamId"].ToString()) };
+                            j.Champion = champion;
+
                             //Récup info invocateur pricipal
-                            if (idParticipant == game.idParticipantPrincial)
+                            if (idParticipant == partie.Joueur.Id)
                             {
                                 //Victoire ?
-                                game.Victory = bool.Parse(playersStats["stats"]["win"].ToString());
+                                partie.Victoire = bool.Parse(playersStats["stats"]["win"].ToString());
                                 //Spells invocateur
-                                game.ImgSpell1 = "http://ddragon.leagueoflegends.com/cdn/10.6.1/img/spell/" +
+                                partie.Joueur.Sort1 = "http://ddragon.leagueoflegends.com/cdn/10.6.1/img/spell/" +
                                     await Helpers.IdToName.GetSpellName(Int32.Parse(playersStats["spell1Id"].ToString()))
                                     + ".png";
-                                game.ImgSpell2 = "http://ddragon.leagueoflegends.com/cdn/10.6.1/img/spell/" +
+                                partie.Joueur.Sort2 = "http://ddragon.leagueoflegends.com/cdn/10.6.1/img/spell/" +
                                     await Helpers.IdToName.GetSpellName(Int32.Parse(playersStats["spell2Id"].ToString()))
                                     + ".png";
 
                                 //Img du champion
-                                game.ImgChampion = pl.ImageChampion;
-                                game.Kills = Int32.Parse(playersStats["stats"]["kills"].ToString());
-                                game.Deaths = Int32.Parse(playersStats["stats"]["deaths"].ToString());
-                                game.Assists = Int32.Parse(playersStats["stats"]["assists"].ToString());
-                                game.Creeps = Int32.Parse(playersStats["stats"]["totalMinionsKilled"].ToString());
-                                game.Level = Int32.Parse(playersStats["stats"]["champLevel"].ToString());
-                                game.KDA = (game.Kills + game.Assists) / game.Deaths;
-                                game.Lane = playersStats["timeline"]["lane"].ToString();
+                                partie.Joueur.NbTue = Int32.Parse(playersStats["stats"]["kills"].ToString());
+                                partie.Joueur.NbMort = Int32.Parse(playersStats["stats"]["deaths"].ToString());
+                                partie.Joueur.NbAssist = Int32.Parse(playersStats["stats"]["assists"].ToString());
+                                partie.Joueur.NbSbire = Int32.Parse(playersStats["stats"]["totalMinionsKilled"].ToString());
+                                partie.Joueur.Level = Int32.Parse(playersStats["stats"]["champLevel"].ToString());
+                                partie.Joueur.KDA = (partie.Joueur.NbTue + partie.Joueur.NbAssist) / partie.Joueur.NbMort;
+                                partie.Joueur.Poste = playersStats["timeline"]["lane"].ToString();
 
                                 for (int i = 0; i < 6; i++)
                                 {
                                     string path = VirtualPathUtility.ToAbsolute("~/Content/img/assets/empty.png");
 
-                                    Item item = await Helpers.IdToName.GetItem(Int32.Parse(playersStats["stats"]["item" + i].ToString()));
-                                    game.Items.Add(item);
+                                    Equipement item = await Helpers.IdToName.GetItem(Int32.Parse(playersStats["stats"]["item" + i].ToString()));
+                                    partie.Joueur.Equipements.Add(item);
                                 }
                             }
 
                         }
-                        history.Add(game);
+                        history.Add(partie);
                     }
 
                 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PocketSummonner.Migrations;
+using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
@@ -18,5 +19,10 @@ namespace PocketSummonner.Models.BDD
         public DbSet<Partie> Parties { get; set; }
         public DbSet<Joueur> Joueurs { get; set; }
 
+
+        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        {
+            Database.SetInitializer(new MigrateDatabaseToLatestVersion<DataContext, Configuration>());
+        }
     }
 }

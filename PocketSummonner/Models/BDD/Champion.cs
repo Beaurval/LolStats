@@ -5,12 +5,10 @@ using System.Web;
 
 namespace PocketSummonner.Models.BDD
 {
-    public class Equipe
+    public class Champion
     {
         public int Id { get; set; }
-        public string Color { get; set; }
-
-        //Relations
-        public virtual List<Joueur> Joueurs { get; set; }
+        public string Nom { get; set; }
+        public string Image { get; set; }
     }
 }

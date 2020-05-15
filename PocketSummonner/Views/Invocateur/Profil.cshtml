@@ -1,5 +1,5 @@
-﻿@using PocketSummonner.Models.Profil
-@model List<GameHistory>
+﻿@using PocketSummonner.Models.BDD
+@model List<Partie>
 @{
     ViewBag.Title = "Profil de l'invocateur";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -24,64 +24,64 @@
         <div class="container statsContainer">
             <div class="row">
                 <div class="col-8">
-                    @foreach (GameHistory game in Model)
+                    @foreach (Partie partie in Model)
                     {
-                        <div class="gameHistory @(game.Victory?"victory":"defeat") pt-3 ">
+                        <div class="gameHistory @(partie.Victoire?"victory":"defeat") pt-3 ">
                             <div class="historyHeader">
-                                <span>@game.TypeGame</span>
-                                <span>@(Math.Round(game.Duration / (double)60, 0))min</span>
-                                <span>@game.HistoryDate.ToShortDateString()</span>
+                                <span>@partie.TypePartie</span>
+                                <span>@(Math.Round(partie.Duree / (double)60, 0))min</span>
+                                <span>@partie.DatePartie.ToShortDateString()</span>
                             </div>
                             <div class="history">
-                                <img style="margin: auto 0 auto 10px; display: block;" height="100" width="100" src="@game.ImgChampion" alt="Alternate Text" />
+                                <img style="margin: auto 0 auto 10px; display: block;" height="100" width="100" src="@partie.Joueur.Champion.Image" alt="Alternate Text" />
                                 <div class="spells">
-                                    <img height="50" width="50" src="@game.ImgSpell1" /><img height="50" width="50" src="@game.ImgSpell2" />
+                                    <img height="50" width="50" src="@partie.Joueur.Sort1" /><img height="50" width="50" src="@partie.Joueur.Sort2" />
                                 </div>
                                 <div class="items">
                                     <div class="line">
-                                        <img width="40" src="@game.Items[0].Image" alt="" />
-                                        <img width="40" src="@game.Items[1].Image" alt="" />
-                                        <img width="40" src="@game.Items[2].Image" alt="" />
+                                        <img width="40" src="@partie.Joueur.Equipements[0].Image" alt="" />
+                                        <img width="40" src="@partie.Joueur.Equipements[1].Image" alt="" />
+                                        <img width="40" src="@partie.Joueur.Equipements[2].Image" alt="" />
                                     </div>
                                     <div class="line">
-                                        <img width="40" src="@game.Items[3].Image" alt="" />
-                                        <img width="40" src="@game.Items[4].Image" alt="" />
-                                        <img width="40" src="@game.Items[5].Image" alt="" />
+                                        <img width="40" src="@partie.Joueur.Equipements[3].Image" alt="" />
+                                        <img width="40" src="@partie.Joueur.Equipements[4].Image" alt="" />
+                                        <img width="40" src="@partie.Joueur.Equipements[5].Image" alt="" />
                                     </div>
                                 </div>
                                 <div class="score">
                                     <div class="kda">
-                                        <span><strong class="text-success">@game.Kills</strong> / <strong class="text-danger">@game.Deaths</strong> / <strong class="text-primary">@game.Assists</strong></span>
+                                        <span><strong class="text-success">@partie.Joueur.NbTue</strong> / <strong class="text-danger">@partie.Joueur.NbMort</strong> / <strong class="text-primary">@partie.Joueur.NbAssist</strong></span>
                                     </div>
 
                                     <div class="creeps">
                                         <span>
-                                            <strong class="text-warning">LVL @game.Level</strong> / <strong class="text-secondary">@game.Creeps CS</strong>
+                                            <strong class="text-warning">LVL @partie.Joueur.Level</strong> / <strong class="text-secondary">@partie.Joueur.NbSbire CS</strong>
                                             @*<img width="30" height="25" src="http://ddragon.leagueoflegends.com/cdn/5.5.1/img/ui/minion.png" alt="Alternate Text" />*@
                                         </span>
                                     </div>
 
                                     <div class="kdaPrct">
-                                        <span class="text-secondary">@game.KDA KDA</span>
+                                        <span class="text-secondary">@partie.Joueur.KDA KDA</span>
                                     </div>
 
                                 </div>
                                 <div class="players">
                                     <div class="team">
-                                        @foreach (Player pl in game.Players.Where(x => x.idTeam == 100))
+                                        @foreach (Joueur j in partie.AutreJoueurs.Where(x => x.Equipe.Id == 100))
                                         {
                                             <div>
-                                                <img src="@pl.ImageChampion" alt="Alternate Text" />
-                                                <span>@pl.Name</span>
+                                                <img src="@j.Champion.Image" alt="Alternate Text" />
+                                                <span>@j.Invocateur.Name</span>
                                             </div>
                                         }
                                     </div>
                                     <div class="team">
-                                        @foreach (Player pl in game.Players.Where(x => x.idTeam == 200))
+                                        @foreach (Joueur j in partie.AutreJoueurs.Where(x => x.Equipe.Id == 200))
                                         {
                                             <div>
-                                                <img src="@pl.ImageChampion" alt="Alternate Text" />
-                                                <span>@pl.Name</span>
+                                                <img src="@j.Champion.Image" alt="Alternate Text" />
+                                                <span>@j.Invocateur.Name</span>
                                             </div>
                                         }
                                     </div>

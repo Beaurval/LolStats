@@ -156,6 +156,7 @@
     <Compile Include="Helpers\ApiCall.cs" />
     <Compile Include="Helpers\ConvertJson.cs" />
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Models\BDD\Champion.cs" />
     <Compile Include="Models\BDD\DataContext.cs" />
     <Compile Include="Models\BDD\Equipe.cs" />
     <Compile Include="Models\BDD\Invocateur.cs" />

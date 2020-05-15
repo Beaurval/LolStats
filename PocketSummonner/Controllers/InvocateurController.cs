@@ -46,20 +46,20 @@ namespace PocketSummonner.Controllers
             }
 
             //On récupère les parties
-            List<GameHistory> lastMatchs = new List<GameHistory>();
+            List<Partie> lastMatchs = new List<Partie>();
             //L'utilisateur a des parties en base ?
             if (invocateur.DernieresParties.Count > 0)
             {
-               
+                db.Parties.Where(x => x.Joueur.Invocateur.Id == invocateur.Id).ToList();
             }
             //Sinon on les récupères avec l'api et les stock en base
             else
             {
                 lastMatchs = await ApiCall.GetGameHistory(invocateur.AccountId);
+                db.Parties.AddRange(lastMatchs);
+                db.SaveChanges();
             }
                  
-
-
             return View(lastMatchs);
         }
 

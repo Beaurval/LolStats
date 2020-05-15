@@ -18,7 +18,10 @@ namespace PocketSummonner.Models.BDD
         public int Level { get; set; }
         public string Poste { get; set; }
         public double KDA { get; set; }
+        
         //Relations
+        public virtual Equipe Equipe { get; set; }
+        public virtual Champion Champion { get; set; }
         public virtual Invocateur Invocateur { get; set; }
         public virtual List<Equipement> Equipements { get; set; }
     }
