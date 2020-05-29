@@ -1,0 +1,68 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title</title>
+
+    @Styles.Render("~/Content/css")
+    @RenderSection("styles", required: false)
+    <script src="https://kit.fontawesome.com/37f1613248.js" crossorigin="anonymous"></script>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg bg-dark  nav-config">
+        <a class="navbar-brand" href="~/"><img src="~/Content/img/logo/logoWSplash.png" width="140" height="40" alt="Alternate Text" /></a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav ml-auto navbar-text-position">
+                <li class="nav-item active">
+                    <a class="nav-link" href="#">Accueil <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Champions</a>
+                </li>
+                <li class="nav-item" id="search">
+                    <i class="fas fa-search nav-link"></i>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container-fluid p-0 body-content">
+        @RenderBody()
+    </div>
+    <div id="myOverlay" class="overlay">
+        <span class="closebtn" onclick="closeSearch()" title="Close Overlay">x</span>
+        <div class="overlay-content">
+            <form action="@Url.Action("Recherche","Invocateur")" method="post">
+                <input type="text" placeholder="Rechercher un invocateur.." name="name">
+                <button type="submit"><i class="fa fa-search"></i></button>
+            </form>
+        </div>
+    </div>
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+    <script>
+        // Open the full screen search box
+        function openCloseSearch() {
+            $("#myOverlay").toggle();
+        }
+
+        // Close the full screen search box
+        function closeSearch() {
+            document.getElementById("myOverlay").style.display = "none";
+        }
+
+        $(() => {
+            $("#search").click(function () {
+                openCloseSearch();
+            });
+        })
+    </script>
+</body>
+</html>

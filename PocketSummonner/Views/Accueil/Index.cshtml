@@ -1,0 +1,19 @@
+﻿@{
+    /**/
+
+    ViewBag.Title = "Accueil";
+    Layout = "~/Views/Shared/_Accueil.cshtml";
+}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link href="~/Content/homepage.css" rel="stylesheet" />
+
+<div class="carousel-item active search-container diapo">
+    <img id="logo" src="~/Content/img/logo/logoT.png" height="200" />
+
+    <!-- The form -->
+    <form class="example" action="@Url.Action("Recherche","Invocateur")" style="width: 50%;">
+        <input type="text" placeholder="Rechercher un invocateur.." name="name">
+        <button type="submit"><i class="fa fa-search"></i></button>
+    </form>
+</div>
+

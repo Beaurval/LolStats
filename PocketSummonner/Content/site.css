@@ -1,0 +1,58 @@
+﻿body {
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif
+}
+
+.diapo {
+    background-image: url("/Content/img/background/wallpaper_1.jpg");
+    background-size: cover;
+    width: 100%;
+    background-position: 50% 25% !important;
+    height: 450px;
+}
+
+.nav-config {
+    top: 0;
+    z-index: 50;
+    width: 100%;
+    font-size: 1em;
+}
+
+    .nav-config a, i {
+        color: lightgrey;
+        text-decoration: none;
+    }
+
+    .nav-config i {
+        line-height: 23px;
+        cursor: pointer;
+    }
+
+.navbar-text-position {
+    margin-right: 20%;
+    padding: 0 10px 0 100px;
+}
+
+.container-profile {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+}
+.content-bottom {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+}
+.xp-label{
+    position: relative;
+    margin: -15px;
+    height: 0;
+    top: -10px;
+    z-index: 50;
+    background-color: black;
+    color: white;
+    border-radius: 50px;
+    padding: 10px;
+    left: 38%;
+    border: 1px solid yellow;
+}
