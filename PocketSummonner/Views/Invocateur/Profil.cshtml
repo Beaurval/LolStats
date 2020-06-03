@@ -1,131 +1,448 @@
-﻿@using PocketSummonner.Models.Profil
-@model List<GameHistory>
+﻿@using PocketSummonner.Models.BDD
+@model List<Joueur>
 @{
-    ViewBag.Title = "Profil de l'invocateur";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "Profil";
+    string urlProfil = "http://ddragon.leagueoflegends.com/cdn/10.11.1/img/profileicon/";
 }
-<link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
-<link href="~/Content/profil.css" rel="stylesheet" />
-<div style="background-color: beige; height: 100vh;">
-    <div class="container-fluid" id="mainContainer">
-        <div class="container">
-            <div class="row pt-5">
-                <div class="imgProfile">
-                    <img src="http://ddragon.leagueoflegends.com/cdn/10.5.1/img/profileicon/3898.png" alt="Alternate Text" />
-                    <span class="level">61</span>
-                </div>
+@section styles{
+    <style>
+        body {
+            color: white;
+            background-color: #292a60;
+        }
 
-                <div class="col-4 playerInfo">
-                    <p class="playerName">Zorvan <span class="text-secondary">EUW1</span></p>
-                    <p class="rank">Diamand II</p>
-                </div>
-            </div>
+        .txt1 {
+            color: beige;
+        }
+
+        .txt2 {
+            color: #bcb7be;
+            font-size: 0.9em;
+        }
+
+        .profilName {
+            color: white;
+        }
+
+        .victory {
+            color: #00cb00;
+        }
+
+        .defeat {
+            color: red;
+        }
+
+        .card {
+            border: none !important;
+        }
+
+        .card-body {
+            background-color: #29476e;
+        }
+
+        .card-header {
+            background-color: #123a60;
+        }
+
+        .game {
+            border-left: 4px solid green;
+            background-color: #00144b;
+            margin: 5px;
+            padding: 5px 0 5px 0;
+            overflow: hidden;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-evenly;
+        }
+
+            .game > div {
+                margin: auto 0 auto 0;
+            }
+
+        .line {
+            display: flex;
+            flex-direction: row;
+            margin-bottom: 10px;
+        }
+
+            .line > img {
+                border: 1px solid black;
+                height: 35px;
+                width: 35px;
+                border-radius: 10px;
+                margin-right: 10px;
+            }
+
+        .champion {
+            display: flex;
+            flex-direction: row;
+        }
+
+            .champion div:first-child img {
+                height: 80px;
+                width: 80px;
+            }
+
+        .spells {
+            display: flex;
+            flex-direction: column;
+        }
+
+            .spells img {
+                height: 40px;
+            }
+
+        .players {
+            display: flex;
+            flex-direction: row;
+            width: 150px;
+        }
+
+        .player {
+            display: flex;
+            flex-direction: row;
+        }
+
+            .player > img {
+                width: 20px;
+                height: 20px;
+                border: 1px solid black;
+            }
+
+
+        .column {
+            display: flex;
+            flex-direction: column;
+            margin-right: 2px;
+            overflow: hidden;
+            width: 190px !important;
+        }
+
+
+        .rank {
+            display: flex;
+            flex-direction: row;
+        }
+
+            .rank > div:first-child {
+                margin-right: 15px;
+            }
+
+            .playerName{
+                width: 180px;
+                white-space: nowrap;
+            }
+
+            .lvl{
+                position: relative;
+                top: -15px;
+                left: 28px;
+                background-color: gold;
+                padding: 5px;
+                border-radius: 10px;
+                font-size: 0.7em;
+            }
+
+            .imgProfile{
+                border: 2px solid gold;
+            }
+
+        /*
+        *
+        * ==========================================
+        * CUSTOM UTIL CLASSES
+        * ==========================================
+        *
+        */
+
+        .progress {
+            width: 100px;
+            height: 100px;
+            background: none;
+            position: relative;
+        }
+
+            .progress::after {
+                content: "";
+                width: 100%;
+                height: 100%;
+                border-radius: 50%;
+                border: 6px solid #eee;
+                position: absolute;
+                top: 0;
+                left: 0;
+            }
+
+            .progress > span {
+                width: 50%;
+                height: 100%;
+                overflow: hidden;
+                position: absolute;
+                top: 0;
+                z-index: 1;
+            }
+
+            .progress .progress-left {
+                left: 0;
+            }
+
+            .progress .progress-bar {
+                width: 100%;
+                height: 100%;
+                background: none;
+                border-width: 6px;
+                border-style: solid;
+                position: absolute;
+                top: 0;
+            }
+
+            .progress .progress-left .progress-bar {
+                left: 100%;
+                border-top-right-radius: 80px;
+                border-bottom-right-radius: 80px;
+                border-left: 0;
+                -webkit-transform-origin: center left;
+                transform-origin: center left;
+            }
+
+            .progress .progress-right {
+                right: 0;
+            }
+
+                .progress .progress-right .progress-bar {
+                    left: -100%;
+                    border-top-left-radius: 80px;
+                    border-bottom-left-radius: 80px;
+                    border-right: 0;
+                    -webkit-transform-origin: center right;
+                    transform-origin: center right;
+                }
+
+            .progress .progress-value {
+                position: absolute;
+                top: 0;
+                left: 0;
+            }
+    </style>
+}
+
+<div class="container ">
+
+    <div class="row my-2">
+        <div class="col-xl-1 col-sm-2 mr-2">
+            <img width="80" height="80" class="rounded-circle imgProfile" src="@urlProfil@(Model.First().Invocateur.ImageProfil).png">
+            <span class="lvl">@Model.First().Invocateur.Niveau</span>
         </div>
-        <div class="container statsContainer">
+        <div class="col-4">
+            <div class="mb-2"><span class="profilName">@Model.First().Invocateur.Name</span></div>
+            <div><span class="btn btn-success rounded-pill">@Model.First().Invocateur.Region</span></div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xl-3 col-sm-12 ">
             <div class="row">
-                <div class="col-8">
-                    @foreach (GameHistory game in Model)
-                    {
-                        <div class="gameHistory @(game.Victory?"victory":"defeat") pt-3 ">
-                            <div class="historyHeader">
-                                <span>@game.TypeGame</span>
-                                <span>@(Math.Round(game.Duration / (double)60, 0))min</span>
-                                <span>@game.HistoryDate.ToShortDateString()</span>
+                <div class="col-12 mb-2 ">
+                    <div class="card ">
+                        <div class="card-body rank">
+                            <div class="progress" data-value='70'>
+                                <span class="progress-left">
+                                    <span class="progress-bar border-primary"></span>
+                                </span>
+                                <span class="progress-right">
+                                    <span class="progress-bar border-primary"></span>
+                                </span>
+                                <div class="progress-value w-100 h-100 rounded-circle d-flex align-items-center justify-content-center"
+                                     style="overflow: hidden">
+                                    <img src="cat.jpg" width="150" alt="">
+                                </div>
                             </div>
-                            <div class="history">
-                                <img style="margin: auto 0 auto 10px; display: block;" height="100" width="100" src="@game.ImgChampion" alt="Alternate Text" />
-                                <div class="spells">
-                                    <img height="50" width="50" src="@game.ImgSpell1" /><img height="50" width="50" src="@game.ImgSpell2" />
-                                </div>
-                                <div class="items">
-                                    <div class="line">
-                                        <img width="40" src="@game.Items[0].Image" alt="" />
-                                        <img width="40" src="@game.Items[1].Image" alt="" />
-                                        <img width="40" src="@game.Items[2].Image" alt="" />
-                                    </div>
-                                    <div class="line">
-                                        <img width="40" src="@game.Items[3].Image" alt="" />
-                                        <img width="40" src="@game.Items[4].Image" alt="" />
-                                        <img width="40" src="@game.Items[5].Image" alt="" />
-                                    </div>
-                                </div>
-                                <div class="score">
-                                    <div class="kda">
-                                        <span><strong class="text-success">@game.Kills</strong> / <strong class="text-danger">@game.Deaths</strong> / <strong class="text-primary">@game.Assists</strong></span>
-                                    </div>
-
-                                    <div class="creeps">
-                                        <span>
-                                            <strong class="text-warning">LVL @game.Level</strong> / <strong class="text-secondary">@game.Creeps CS</strong>
-                                            @*<img width="30" height="25" src="http://ddragon.leagueoflegends.com/cdn/5.5.1/img/ui/minion.png" alt="Alternate Text" />*@
-                                        </span>
-                                    </div>
-
-                                    <div class="kdaPrct">
-                                        <span class="text-secondary">@game.KDA KDA</span>
-                                    </div>
-
-                                </div>
-                                <div class="players">
-                                    <div class="team">
-                                        @foreach (Player pl in game.Players.Where(x => x.idTeam == 100))
-                                        {
-                                            <div>
-                                                <img src="@pl.ImageChampion" alt="Alternate Text" />
-                                                <span>@pl.Name</span>
-                                            </div>
-                                        }
-                                    </div>
-                                    <div class="team">
-                                        @foreach (Player pl in game.Players.Where(x => x.idTeam == 200))
-                                        {
-                                            <div>
-                                                <img src="@pl.ImageChampion" alt="Alternate Text" />
-                                                <span>@pl.Name</span>
-                                            </div>
-                                        }
-                                    </div>
-                                </div>
+                            <div>
+                                <span>Coucou</span>
                             </div>
                         </div>
-                    }
+                    </div>
                 </div>
-                <div class="col-4 border">
-                    <div class="row">
-                        <div class="col-12">
-                            <div id="donutchart" style="width: 100%; height: 350px;"></div>
+                <div class="col-12 mb-2">
+                    <div class="card">
+                        <div class="card-body mx-auto">
+                            <h5 class="card-title">Special title treatment</h5>
+                            <p class="card-text">
+                                With supporting text below as a natural lead-in to additional
+                                content.
+                            </p>
+                            <a href="#" class="btn btn-primary">Go somewhere</a>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+        <div class="col-md-12 col-xl-8">
+            <div class="card">
+                <div class="card-header">
+                    <div class="row">
+                        <div class="col-8"></div>
+                        <div class="col-2">
+                            <h6 class="text-center">@Model.Where(x => x.Victoire).Count()<br><strong class="text-success">Victoires</strong></h6>
+                        </div>
+                        <div class="col-2">
+                            <h6 class="text-center">@Model.Where(x => !x.Victoire).Count()<br><strong class="text-danger">Défaites</strong></h6>
+                        </div>
+                    </div>
+                </div>
+                @foreach (Joueur j in Model)
+                {
+                    <div class="card-body pr-2">
+                        <div class="game">
+                            <div>
+                                <div>
+                                    <div>
+                                        <span class="@(j.Victoire ? "victory" : "defeat")">@(j.Victoire ? "Victoire" : "Défaite")</span><br>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div>
+                                        <span class="txt1">Level @j.Level</span><br>
+                                        <span class="txt2">@(j.Partie.Duree / 60) min</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <div>
+                                    <div>
+                                        <br>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div>
+                                        <span class="txt1">@j.NbTue/@j.NbMort/@j.NbAssist</span><br>
+                                        <span class="txt2">KDA : @j.KDA</span>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="champion">
+                                <div>
+                                    <img src="@j.Champion.Image" class="border champ">
+                                </div>
+                                <div class="spells">
+                                    <img src="@j.Sort1.UrlImage" class="border spell">
+                                    <img src="@j.Sort2.UrlImage" class="border spell">
+                                </div>
+                            </div>
+                            <div>
+                                <div class="line">
+                                    <img src="@(j.Equipements.ElementAtOrDefault(0) != null ? j.Equipements.ElementAt(0).Image : "/Content/img/assets/empty.png")">
+                                    <img src="@(j.Equipements.ElementAtOrDefault(1) != null ? j.Equipements.ElementAt(1).Image : "/Content/img/assets/empty.png")">
+                                    <img src="@(j.Equipements.ElementAtOrDefault(2) != null ? j.Equipements.ElementAt(2).Image : "/Content/img/assets/empty.png")">
+                                </div>
+                                <div class="line mb-0">
+                                    <img src="@(j.Equipements.ElementAtOrDefault(3) != null ? j.Equipements.ElementAt(3).Image : "/Content/img/assets/empty.png")">
+                                    <img src="@(j.Equipements.ElementAtOrDefault(4) != null ? j.Equipements.ElementAt(4).Image : "/Content/img/assets/empty.png")">
+                                    <img src="@(j.Equipements.ElementAtOrDefault(5) != null ? j.Equipements.ElementAt(5).Image : "/Content/img/assets/empty.png")">
+                                </div>
+                            </div>
+                            <div>
+                                <div class="players">
+                                    <div class="column">
+                                        <div class="player txt1">
+                                            <img title="@j.Partie.Joueurs.ElementAt(0).Invocateur.Name" 
+                                                 src="@urlProfil@(j.Partie.Joueurs.ElementAt(0).Invocateur.ImageProfil).png">
+                                            <span class="playerName">@j.Partie.Joueurs.ElementAt(0).Invocateur.Name</span>
+                                        </div>
+                                        <div class="player txt1">
+                                            <img title="@j.Partie.Joueurs.ElementAt(1).Invocateur.Name" 
+                                                 src="@urlProfil@(j.Partie.Joueurs.ElementAt(1).Invocateur.ImageProfil).png">
+                                            <span class="playerName">@j.Partie.Joueurs.ElementAt(1).Invocateur.Name</span>
+                                        </div>
+                                        <div class="player txt1">
+                                            <img title="@j.Partie.Joueurs.ElementAt(2).Invocateur.Name" 
+                                                 src="@urlProfil@(j.Partie.Joueurs.ElementAt(2).Invocateur.ImageProfil).png">
+                                            <span class="playerName">@j.Partie.Joueurs.ElementAt(2).Invocateur.Name</span>
+                                        </div>
+                                        <div class="player txt1">
+                                            <img title="@j.Partie.Joueurs.ElementAt(3).Invocateur.Name" 
+                                                 src="@urlProfil@(j.Partie.Joueurs.ElementAt(3).Invocateur.ImageProfil).png">
+                                            <span class="playerName">@j.Partie.Joueurs.ElementAt(3).Invocateur.Name</span>
+                                        </div>
+                                        <div class="player txt1">
+                                            <img title="@j.Partie.Joueurs.ElementAt(4).Invocateur.Name" 
+                                                 src="@urlProfil@(j.Partie.Joueurs.ElementAt(4).Invocateur.ImageProfil).png">
+                                            <span class="playerName">@j.Partie.Joueurs.ElementAt(4).Invocateur.Name</span>
+                                        </div>
+                                    </div>
+                                    <div class="column">
+                                        <div class="player txt1">
+                                            <img title="@j.Partie.Joueurs.ElementAt(5).Invocateur.Name" 
+                                                 src="@urlProfil@(j.Partie.Joueurs.ElementAt(5).Invocateur.ImageProfil).png">
+                                            <span class="playerName">@j.Partie.Joueurs.ElementAt(5).Invocateur.Name</span>
+                                        </div>
+                                        <div class="player txt1">
+                                            <img title="@j.Partie.Joueurs.ElementAt(6).Invocateur.Name" 
+                                                 src="@urlProfil@(j.Partie.Joueurs.ElementAt(6).Invocateur.ImageProfil).png">
+                                            <span class="playerName">@j.Partie.Joueurs.ElementAt(6).Invocateur.Name</span>
+                                        </div>
+                                        <div class="player txt1">
+                                            <img title="@j.Partie.Joueurs.ElementAt(7).Invocateur.Name" 
+                                                 src="@urlProfil@(j.Partie.Joueurs.ElementAt(7).Invocateur.ImageProfil).png">
+                                            <span class="playerName">@j.Partie.Joueurs.ElementAt(7).Invocateur.Name</span>
+                                        </div>
+                                        <div class="player txt1">
+                                            <img title="@j.Partie.Joueurs.ElementAt(8).Invocateur.Name" 
+                                                 src="@urlProfil@(j.Partie.Joueurs.ElementAt(8).Invocateur.ImageProfil).png">
+                                            <span class="playerName">@j.Partie.Joueurs.ElementAt(8).Invocateur.Name</span>
+                                        </div>
+                                        <div class="player txt1">
+                                            <img title="@j.Partie.Joueurs.ElementAt(9).Invocateur.Name" 
+                                                 src="@urlProfil@(j.Partie.Joueurs.ElementAt(9).Invocateur.ImageProfil).png">
+                                            <span class="playerName">@j.Partie.Joueurs.ElementAt(9).Invocateur.Name</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
     </div>
 </div>
 @section scripts{
-    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-    <script type="text/javascript">
-        google.charts.load("current", { packages: ["corechart"] });
-        google.charts.setOnLoadCallback(drawChart);
-        function drawChart() {
-            var data = google.visualization.arrayToDataTable([
-                ['Task', 'Hours per Day'],
-                ['Work', 11],
-                ['Eat', 2],
-                ['Commute', 2],
-                ['Watch TV', 2],
-                ['Sleep', 7]
-            ]);
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+            integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+            integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+            crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
+            integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
+            crossorigin="anonymous"></script>
+    <script>
+        $(function () {
 
-            var options = {
-                title: 'My Daily Activities',
-                pieHole: 0.4,
-            };
+            $(".progress").each(function () {
 
-            var chart = new google.visualization.PieChart(document.getElementById('donutchart'));
-            chart.draw(data, options);
-        }
+                var value = $(this).attr('data-value');
+                var left = $(this).find('.progress-left .progress-bar');
+                var right = $(this).find('.progress-right .progress-bar');
+
+                if (value > 0) {
+                    if (value <= 50) {
+                        right.css('transform', 'rotate(' + percentageToDegrees(value) + 'deg)')
+                    } else {
+                        right.css('transform', 'rotate(180deg)')
+                        left.css('transform', 'rotate(' + percentageToDegrees(value - 50) + 'deg)')
+                    }
+                }
+
+            })
+
+            function percentageToDegrees(percentage) {
+
+                return percentage / 100 * 360
+
+            }
+
+        });
     </script>
-
-
 
 }

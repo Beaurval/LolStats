@@ -111,7 +111,7 @@
             card.append(body);
 
             card.click(function () {
-                window.location.href = "@Url.Action("Profil","Invocateur")?summonerId=" + jsonPlayer.accountId;
+                window.location.href = "@Url.Action("Profil","Invocateur")?summonerId=" + jsonPlayer.id;
             })
 
             return card;
