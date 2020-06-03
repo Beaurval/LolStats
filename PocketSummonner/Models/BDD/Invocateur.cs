@@ -11,8 +11,10 @@ namespace PocketSummonner.Models.BDD
         public string AccountId { get; set; }
         public string Name { get; set; }
         public int ImageProfil { get; set; }
+        public int Niveau { get; set; }
+        public string Region { get; set; }
 
         //Relations
-        public virtual List<Partie> DernieresParties { get; set; }
+        public virtual List<Joueur> Joueurs { get; set; }
     }
 }

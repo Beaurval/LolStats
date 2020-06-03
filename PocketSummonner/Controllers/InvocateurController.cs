@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using Microsoft.Ajax.Utilities;
+using Newtonsoft.Json.Linq;
 using PocketSummonner.Data;
 using PocketSummonner.Helpers;
 using PocketSummonner.Models;
@@ -31,6 +32,9 @@ namespace PocketSummonner.Controllers
         //// GET: Invocateur
         public async Task<ActionResult> Profil(string summonerId)
         {
+            //await SaveToDb.MajSpells(db);
+            //await SaveToDb.MajEquipemment(db);
+            //await SaveToDb.MajChampions(db);
             Invocateur invocateur = new Invocateur();
             //Utilisateur en base ?
             if (db.Invocateurs.Where(x => x.Id == summonerId).Count() > 0)
@@ -40,27 +44,27 @@ namespace PocketSummonner.Controllers
             //Sinon on récupère l'invocateur et on le sauvegarde en base
             else
             {
-                invocateur = ConvertJson.ConvertJsonSummoner(await ApiCall.GetJsonSummoner(summonerId));
+                invocateur = await ApiCall.GetSummoner(summonerId);
                 db.Invocateurs.Add(invocateur);
                 db.SaveChanges();
             }
 
-            //On récupère les parties
-            List<Partie> lastMatchs = new List<Partie>();
-            //L'utilisateur a des parties en base ?
-            if (invocateur.DernieresParties.Count > 0)
+            //On récupère les derniers joueurs que l'invocateur a incarné
+            List<Joueur> lastJoueurs = new List<Joueur>();
+            //L'utilisateur a des joueurs en base ?
+            if (invocateur.Joueurs.Count > 0)
             {
-                db.Parties.Where(x => x.Joueur.Invocateur.Id == invocateur.Id).ToList();
+                lastJoueurs = invocateur.Joueurs;
             }
             //Sinon on les récupères avec l'api et les stock en base
             else
             {
-                lastMatchs = await ApiCall.GetGameHistory(invocateur.AccountId);
-                db.Parties.AddRange(lastMatchs);
+                lastJoueurs = await ApiCall.GetGameHistory(invocateur.AccountId,db);
+                db.Joueurs.AddRange(lastJoueurs);
                 db.SaveChanges();
             }
                  
-            return View(lastMatchs);
+            return View(lastJoueurs);
         }
 
         public ActionResult Recherche(string name)

@@ -154,7 +154,7 @@
     </Compile>
     <Compile Include="Helpers\IdToName.cs" />
     <Compile Include="Helpers\ApiCall.cs" />
-    <Compile Include="Helpers\ConvertJson.cs" />
+    <Compile Include="Helpers\SaveToDb.cs" />
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\BDD\Champion.cs" />
     <Compile Include="Models\BDD\DataContext.cs" />
@@ -163,6 +163,7 @@
     <Compile Include="Models\BDD\Joueur.cs" />
     <Compile Include="Models\BDD\Equipement.cs" />
     <Compile Include="Models\BDD\Partie.cs" />
+    <Compile Include="Models\BDD\Sort.cs" />
     <Compile Include="Models\Profil\GameHistory.cs" />
     <Compile Include="Models\Profil\Item.cs" />
     <Compile Include="Models\Profil\Player.cs" />
@@ -373,9 +374,10 @@
     <Content Include="Scripts\popper.js.map" />
     <Content Include="Scripts\popper-utils.min.js.map" />
     <Content Include="Scripts\popper-utils.js.map" />
-    <Content Include="Views\Invocateur\Profil.cshtml" />
+    <Content Include="Views\Invocateur\Profil2.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Invocateur\Recherche.cshtml" />
+    <Content Include="Views\Invocateur\Profil.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

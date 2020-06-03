@@ -15,7 +15,6 @@ namespace PocketSummonner.Models.BDD
 
 
         //Relations
-        public virtual Joueur Joueur { get; set; }
-        public virtual List<Joueur> AutreJoueurs { get; set; }
+        public virtual List<Joueur> Joueurs { get; set; }
     }
 }
