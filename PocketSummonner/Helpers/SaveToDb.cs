@@ -37,9 +37,9 @@ namespace PocketSummonner.Helpers
                 List<Sort> sort = await ApiCall.GetSpells();
                 db.Sorts.RemoveRange(db.Sorts.ToList());
                 db.Sorts.AddRange(sort);
-                db.Database.ExecuteSqlCommand("SET IDENTITY_INSERT dbo.Sorts ON;");
+                db.Database.ExecuteSqlCommand("SET IDENTITY_INSERT LolStats.dbo.Sorts ON;");
                 db.SaveChanges();
-                db.Database.ExecuteSqlCommand("SET IDENTITY_INSERT dbo.Sorts OFF");
+                db.Database.ExecuteSqlCommand("SET IDENTITY_INSERT LolStats.dbo.Sorts OFF");
                 db.SaveChanges();
                 transaction.Commit();
             }
@@ -63,10 +63,10 @@ namespace PocketSummonner.Helpers
             using (var transaction = db.Database.BeginTransaction())
             {
                 List<Equipement> equipements = await ApiCall.GetEquipements();
-
                 db.Equipements.RemoveRange(db.Equipements.ToList());
-                db.Equipements.AddRange(equipements);
+                db.SaveChanges();
                 db.Equipements.Add(new Equipement { Id = 1, Description = "", Nom = "empty", Image = "~/Content/img/assets/empty.png" });
+                db.Equipements.AddRange(equipements);
                 db.Database.ExecuteSqlCommand("SET IDENTITY_INSERT dbo.Equipements ON;");
                 db.SaveChanges();
                 db.Database.ExecuteSqlCommand("SET IDENTITY_INSERT dbo.Equipements OFF");

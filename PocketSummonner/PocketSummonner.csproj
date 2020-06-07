@@ -61,8 +61,6 @@
       <HintPath>..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\lib\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="MySql.Data, Version=8.0.20.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL" />
-    <Reference Include="MySql.Data.EntityFramework, Version=8.0.20.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL" />
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -146,13 +144,11 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\AccueilController.cs" />
-    <Compile Include="Controllers\ApiController.cs" />
     <Compile Include="Controllers\InvocateurController.cs" />
-    <Compile Include="Data\Api.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Helpers\IdToName.cs" />
+    <Compile Include="Helpers\Fonctions.cs" />
     <Compile Include="Helpers\ApiCall.cs" />
     <Compile Include="Helpers\SaveToDb.cs" />
     <Compile Include="Migrations\Configuration.cs" />
@@ -162,11 +158,10 @@
     <Compile Include="Models\BDD\Invocateur.cs" />
     <Compile Include="Models\BDD\Joueur.cs" />
     <Compile Include="Models\BDD\Equipement.cs" />
+    <Compile Include="Models\BDD\Maitrise.cs" />
     <Compile Include="Models\BDD\Partie.cs" />
     <Compile Include="Models\BDD\Sort.cs" />
-    <Compile Include="Models\Profil\GameHistory.cs" />
-    <Compile Include="Models\Profil\Item.cs" />
-    <Compile Include="Models\Profil\Player.cs" />
+    <Compile Include="Models\Profil\ProfilModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -183,6 +178,15 @@
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\fullscreenSearch.css" />
     <Content Include="Content\homepage.css" />
+    <Content Include="Content\img\assets\BRONZE.png" />
+    <Content Include="Content\img\assets\CHALLENGER.png" />
+    <Content Include="Content\img\assets\DIAMOND.png" />
+    <Content Include="Content\img\assets\GOLD.png" />
+    <Content Include="Content\img\assets\GRANDMASTER.png" />
+    <Content Include="Content\img\assets\IRON.png" />
+    <Content Include="Content\img\assets\MASTER.png" />
+    <Content Include="Content\img\assets\PLATINIUM.png" />
+    <Content Include="Content\img\assets\SILVER.png" />
     <Content Include="Content\img\assets\empty.png" />
     <Content Include="Content\img\background\wallpaper_1.jpg" />
     <Content Include="Content\img\logo\logo.png" />
@@ -374,10 +378,11 @@
     <Content Include="Scripts\popper.js.map" />
     <Content Include="Scripts\popper-utils.min.js.map" />
     <Content Include="Scripts\popper-utils.js.map" />
-    <Content Include="Views\Invocateur\Profil2.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Invocateur\Recherche.cshtml" />
     <Content Include="Views\Invocateur\Profil.cshtml" />
+    <Content Include="Views\Shared\_UserStats.cshtml" />
+    <Content Include="Views\Shared\_UserMaitrise.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

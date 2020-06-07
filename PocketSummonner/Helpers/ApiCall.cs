@@ -1,13 +1,10 @@
 ﻿using Newtonsoft.Json.Linq;
 using PocketSummonner.Models.BDD;
-using RestSharp;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
-using System.Web;
 
 namespace PocketSummonner.Helpers
 {
@@ -21,13 +18,18 @@ namespace PocketSummonner.Helpers
             client.DefaultRequestHeaders.Add("X-Riot-Token", api_key);
 
             var response = await client.GetAsync("https://euw1.api.riotgames.com/lol/summoner/v4/summoners/" + summonerId);
+
+            var responseRanked = await client.GetAsync("https://euw1.api.riotgames.com/lol/league/v4/entries/by-summoner/" + summonerId);
+            JArray rankedInfo = JArray.Parse(await responseRanked.Content.ReadAsStringAsync());
+
             Invocateur invocateur = new Invocateur();
             do
             {
                 string content = await response.Content.ReadAsStringAsync();
                 JObject jsonInvocateur = JObject.Parse(content);
-                if (response.IsSuccessStatusCode)
+                if (response.IsSuccessStatusCode && responseRanked.IsSuccessStatusCode)
                 {
+
                     invocateur = new Invocateur
                     {
                         Id = jsonInvocateur["id"].ToString(),
@@ -38,6 +40,29 @@ namespace PocketSummonner.Helpers
                         Region = "EUW1",
                         Joueurs = new List<Joueur>()
                     };
+
+                    if (rankedInfo.Count > 0)
+                    {
+                        foreach (JObject r in rankedInfo)
+                        {
+                            if (r["queueType"].ToString() == "RANKED_SOLO_5x5")
+                            {
+                                invocateur.LeaguePoints = Int32.Parse(r["leaguePoints"].ToString());
+                                invocateur.Win = Int32.Parse(r["wins"].ToString());
+                                invocateur.Losses = Int32.Parse(r["losses"].ToString());
+                                invocateur.Rank = r["rank"].ToString();
+                                invocateur.Tier = r["tier"].ToString();
+                            }
+                            else
+                            {
+                                invocateur.LeaguePoints = 0;
+                                invocateur.Win = 0;
+                                invocateur.Losses = 0;
+                                invocateur.Rank = "";
+                                invocateur.Tier = "UNRANKED";
+                            }
+                        }
+                    }
                 }
                 else
                     System.Threading.Thread.Sleep(1000 * 60 * 2);
@@ -86,12 +111,21 @@ namespace PocketSummonner.Helpers
                         {
                             Joueur j = new Joueur();
                             j.Equipements = new List<Equipement>();
-                            string invocateurId = playersIdentities["player"]["summonerId"].ToString();
-                            Invocateur invocateurJoueur = SaveToDb.SaveInvocateur(
-                                await GetSummoner(invocateurId), db);
                             j.IdParticipant = Int32.Parse(playersIdentities["participantId"].ToString());
-                            j.Invocateur = invocateurJoueur;
 
+
+                            string invocateurId = playersIdentities["player"]["summonerId"].ToString();
+                            if (db.Invocateurs.Find(invocateurId) == null)
+                            {
+                                Invocateur invocateurJoueur = SaveToDb.SaveInvocateur(
+                                    await GetSummoner(invocateurId), db);
+
+                                j.Invocateur = invocateurJoueur;
+                            }
+                            else
+                            {
+                                j.Invocateur = db.Invocateurs.Find(invocateurId);
+                            }
 
                             //Récupération des stats
                             foreach (JObject playersStats in (JArray)jsonMatch["participants"])
@@ -125,7 +159,7 @@ namespace PocketSummonner.Helpers
                                         catch (Exception)
                                         {
                                             itemId = 0;
-                                        } 
+                                        }
 
 
                                         if (itemId != 0)
@@ -172,7 +206,8 @@ namespace PocketSummonner.Helpers
                     sorts.Add(new Sort
                     {
                         Id = Int32.Parse(x.ElementAt(0)["key"].ToString()),
-                        UrlImage = "http://ddragon.leagueoflegends.com/cdn/10.11.1/img/spell/" + x.ElementAt(0)["image"]["full"].ToString()
+                        UrlImage = "http://ddragon.leagueoflegends.com/cdn/10.11.1/img/spell/" + x.ElementAt(0)["image"]["full"].ToString(),
+                        Joueurs = new List<Joueur>()
                     });
                 }
             }
@@ -228,14 +263,42 @@ namespace PocketSummonner.Helpers
                         Id = Int32.Parse(x.Name),
                         Image = "http://ddragon.leagueoflegends.com/cdn/10.11.1/img/item/" + x.ElementAt(0)["image"]["full"].ToString(),
                         Nom = x.ElementAt(0)["name"].ToString(),
-                        Description = x.ElementAt(0)["description"].ToString()
+                        Description = x.ElementAt(0)["description"].ToString(),
+                        Joueurs = new List<Joueur>()
                     });
                 }
             }
             return equipements;
         }
 
+        public async static Task<List<Maitrise>> GetMaitrise(string sumId, DataContext db)
+        {
+            List<Maitrise> maitrises = new List<Maitrise>();
+            HttpClient client = new HttpClient();
+            client.DefaultRequestHeaders.Add("X-Riot-Token", api_key);
 
+            var response = await client.GetAsync("https://euw1.api.riotgames.com/lol/champion-mastery/v4/champion-masteries/by-summoner/" + sumId);
+
+            if (response.IsSuccessStatusCode)
+            {
+                string content = await response.Content.ReadAsStringAsync();
+                JArray maitriseJson = JArray.Parse(content);
+
+                foreach(JObject m in maitriseJson)
+                {
+                    Maitrise maitrise = new Maitrise();
+                    maitrise.Invocateur = await GetSummoner(sumId);
+                    maitrise.Niveau = Int32.Parse(m["championLevel"].ToString());
+                    maitrise.Champion = db.Champions.Find(Int32.Parse(m["championId"].ToString()));
+                    maitrise.ChampionXp = long.Parse(m["championPoints"].ToString());
+                    maitrise.XpRestanteProchainNiveau = Int32.Parse(m["championPointsSinceLastLevel"].ToString());
+
+                    maitrises.Add(maitrise);
+                }
+            }
+
+            return maitrises;
+        }
 
         public static DateTime UnixTimeStampToDateTime(double unixTimeStamp)
         {

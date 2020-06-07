@@ -12,5 +12,8 @@ namespace PocketSummonner.Models.BDD
         public int Id { get; set; }
         public string Nom { get; set; }
         public string Image { get; set; }
+
+        //Relation
+        public virtual List<Maitrise> Maitrises { get; set; }
     }
 }

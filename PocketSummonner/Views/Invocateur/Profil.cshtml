@@ -1,9 +1,12 @@
-﻿@using PocketSummonner.Models.BDD
-@model List<Joueur>
+﻿@using PocketSummonner.Models.Profil
+@using PocketSummonner.Models.BDD
+@model ProfilModel
 @{
     ViewBag.Title = "Profil";
     string urlProfil = "http://ddragon.leagueoflegends.com/cdn/10.11.1/img/profileicon/";
+    Invocateur invocateur = Model.DernieresParties.First().Invocateur;
 }
+
 @section styles{
     <style>
         body {
@@ -45,7 +48,6 @@
         }
 
         .game {
-            border-left: 4px solid green;
             background-color: #00144b;
             margin: 5px;
             padding: 5px 0 5px 0;
@@ -54,6 +56,13 @@
             flex-direction: row;
             justify-content: space-evenly;
         }
+
+            .game.d {
+                border-left: 4px solid red;
+            }
+            .game.v {
+                border-left: 4px solid green;
+            }
 
             .game > div {
                 margin: auto 0 auto 0;
@@ -95,7 +104,7 @@
         .players {
             display: flex;
             flex-direction: row;
-            width: 150px;
+            width: 200px;
         }
 
         .player {
@@ -106,7 +115,7 @@
             .player > img {
                 width: 20px;
                 height: 20px;
-                border: 1px solid black;
+                padding: 2px;
             }
 
 
@@ -128,24 +137,24 @@
                 margin-right: 15px;
             }
 
-            .playerName{
-                width: 180px;
-                white-space: nowrap;
-            }
+        .playerName {
+            width: 180px;
+            white-space: nowrap;
+        }
 
-            .lvl{
-                position: relative;
-                top: -15px;
-                left: 28px;
-                background-color: gold;
-                padding: 5px;
-                border-radius: 10px;
-                font-size: 0.7em;
-            }
+        .lvl {
+            position: relative;
+            top: -15px;
+            left: 28px;
+            background-color: gold;
+            padding: 5px;
+            border-radius: 10px;
+            font-size: 0.7em;
+        }
 
-            .imgProfile{
-                border: 2px solid gold;
-            }
+        .imgProfile {
+            border: 2px solid gold;
+        }
 
         /*
         *
@@ -171,6 +180,7 @@
                 position: absolute;
                 top: 0;
                 left: 0;
+                border-color: darkgrey;
             }
 
             .progress > span {
@@ -223,6 +233,14 @@
                 top: 0;
                 left: 0;
             }
+
+        /*******************/
+        .nav-link.active{
+            color: red !important;
+        }
+        .navigation .nav-link:hover {
+            cursor:pointer;
+        }
     </style>
 }
 
@@ -230,180 +248,34 @@
 
     <div class="row my-2">
         <div class="col-xl-1 col-sm-2 mr-2">
-            <img width="80" height="80" class="rounded-circle imgProfile" src="@urlProfil@(Model.First().Invocateur.ImageProfil).png">
-            <span class="lvl">@Model.First().Invocateur.Niveau</span>
+            <img width="80" height="80" class="rounded-circle imgProfile" src="@urlProfil@(invocateur.ImageProfil).png">
+            <span class="lvl">@invocateur.Niveau</span>
         </div>
         <div class="col-4">
-            <div class="mb-2"><span class="profilName">@Model.First().Invocateur.Name</span></div>
-            <div><span class="btn btn-success rounded-pill">@Model.First().Invocateur.Region</span></div>
+            <div class="mb-2"><span class="profilName">@invocateur.Name</span></div>
+            <div><span class="btn btn-success rounded-pill">@invocateur.Region</span></div>
         </div>
     </div>
     <div class="row">
-        <div class="col-xl-3 col-sm-12 ">
-            <div class="row">
-                <div class="col-12 mb-2 ">
-                    <div class="card ">
-                        <div class="card-body rank">
-                            <div class="progress" data-value='70'>
-                                <span class="progress-left">
-                                    <span class="progress-bar border-primary"></span>
-                                </span>
-                                <span class="progress-right">
-                                    <span class="progress-bar border-primary"></span>
-                                </span>
-                                <div class="progress-value w-100 h-100 rounded-circle d-flex align-items-center justify-content-center"
-                                     style="overflow: hidden">
-                                    <img src="cat.jpg" width="150" alt="">
-                                </div>
-                            </div>
-                            <div>
-                                <span>Coucou</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-12 mb-2">
-                    <div class="card">
-                        <div class="card-body mx-auto">
-                            <h5 class="card-title">Special title treatment</h5>
-                            <p class="card-text">
-                                With supporting text below as a natural lead-in to additional
-                                content.
-                            </p>
-                            <a href="#" class="btn btn-primary">Go somewhere</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        <div class="col-12 mb-3">
+            <ul class="nav nav-tabs navigation">
+                <li class="nav-item">
+                    <a class="nav-link onglet " data-target="statistiques">Statistiques</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link onglet active" data-target="maitrise">Maitrise</a>
+                </li>
+            </ul>
         </div>
-        <div class="col-md-12 col-xl-8">
-            <div class="card">
-                <div class="card-header">
-                    <div class="row">
-                        <div class="col-8"></div>
-                        <div class="col-2">
-                            <h6 class="text-center">@Model.Where(x => x.Victoire).Count()<br><strong class="text-success">Victoires</strong></h6>
-                        </div>
-                        <div class="col-2">
-                            <h6 class="text-center">@Model.Where(x => !x.Victoire).Count()<br><strong class="text-danger">Défaites</strong></h6>
-                        </div>
-                    </div>
-                </div>
-                @foreach (Joueur j in Model)
-                {
-                    <div class="card-body pr-2">
-                        <div class="game">
-                            <div>
-                                <div>
-                                    <div>
-                                        <span class="@(j.Victoire ? "victory" : "defeat")">@(j.Victoire ? "Victoire" : "Défaite")</span><br>
-                                    </div>
-                                </div>
-                                <div>
-                                    <div>
-                                        <span class="txt1">Level @j.Level</span><br>
-                                        <span class="txt2">@(j.Partie.Duree / 60) min</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div>
-                                <div>
-                                    <div>
-                                        <br>
-                                    </div>
-                                </div>
-                                <div>
-                                    <div>
-                                        <span class="txt1">@j.NbTue/@j.NbMort/@j.NbAssist</span><br>
-                                        <span class="txt2">KDA : @j.KDA</span>
-                                    </div>
-                                </div>
 
-                            </div>
-                            <div class="champion">
-                                <div>
-                                    <img src="@j.Champion.Image" class="border champ">
-                                </div>
-                                <div class="spells">
-                                    <img src="@j.Sort1.UrlImage" class="border spell">
-                                    <img src="@j.Sort2.UrlImage" class="border spell">
-                                </div>
-                            </div>
-                            <div>
-                                <div class="line">
-                                    <img src="@(j.Equipements.ElementAtOrDefault(0) != null ? j.Equipements.ElementAt(0).Image : "/Content/img/assets/empty.png")">
-                                    <img src="@(j.Equipements.ElementAtOrDefault(1) != null ? j.Equipements.ElementAt(1).Image : "/Content/img/assets/empty.png")">
-                                    <img src="@(j.Equipements.ElementAtOrDefault(2) != null ? j.Equipements.ElementAt(2).Image : "/Content/img/assets/empty.png")">
-                                </div>
-                                <div class="line mb-0">
-                                    <img src="@(j.Equipements.ElementAtOrDefault(3) != null ? j.Equipements.ElementAt(3).Image : "/Content/img/assets/empty.png")">
-                                    <img src="@(j.Equipements.ElementAtOrDefault(4) != null ? j.Equipements.ElementAt(4).Image : "/Content/img/assets/empty.png")">
-                                    <img src="@(j.Equipements.ElementAtOrDefault(5) != null ? j.Equipements.ElementAt(5).Image : "/Content/img/assets/empty.png")">
-                                </div>
-                            </div>
-                            <div>
-                                <div class="players">
-                                    <div class="column">
-                                        <div class="player txt1">
-                                            <img title="@j.Partie.Joueurs.ElementAt(0).Invocateur.Name" 
-                                                 src="@urlProfil@(j.Partie.Joueurs.ElementAt(0).Invocateur.ImageProfil).png">
-                                            <span class="playerName">@j.Partie.Joueurs.ElementAt(0).Invocateur.Name</span>
-                                        </div>
-                                        <div class="player txt1">
-                                            <img title="@j.Partie.Joueurs.ElementAt(1).Invocateur.Name" 
-                                                 src="@urlProfil@(j.Partie.Joueurs.ElementAt(1).Invocateur.ImageProfil).png">
-                                            <span class="playerName">@j.Partie.Joueurs.ElementAt(1).Invocateur.Name</span>
-                                        </div>
-                                        <div class="player txt1">
-                                            <img title="@j.Partie.Joueurs.ElementAt(2).Invocateur.Name" 
-                                                 src="@urlProfil@(j.Partie.Joueurs.ElementAt(2).Invocateur.ImageProfil).png">
-                                            <span class="playerName">@j.Partie.Joueurs.ElementAt(2).Invocateur.Name</span>
-                                        </div>
-                                        <div class="player txt1">
-                                            <img title="@j.Partie.Joueurs.ElementAt(3).Invocateur.Name" 
-                                                 src="@urlProfil@(j.Partie.Joueurs.ElementAt(3).Invocateur.ImageProfil).png">
-                                            <span class="playerName">@j.Partie.Joueurs.ElementAt(3).Invocateur.Name</span>
-                                        </div>
-                                        <div class="player txt1">
-                                            <img title="@j.Partie.Joueurs.ElementAt(4).Invocateur.Name" 
-                                                 src="@urlProfil@(j.Partie.Joueurs.ElementAt(4).Invocateur.ImageProfil).png">
-                                            <span class="playerName">@j.Partie.Joueurs.ElementAt(4).Invocateur.Name</span>
-                                        </div>
-                                    </div>
-                                    <div class="column">
-                                        <div class="player txt1">
-                                            <img title="@j.Partie.Joueurs.ElementAt(5).Invocateur.Name" 
-                                                 src="@urlProfil@(j.Partie.Joueurs.ElementAt(5).Invocateur.ImageProfil).png">
-                                            <span class="playerName">@j.Partie.Joueurs.ElementAt(5).Invocateur.Name</span>
-                                        </div>
-                                        <div class="player txt1">
-                                            <img title="@j.Partie.Joueurs.ElementAt(6).Invocateur.Name" 
-                                                 src="@urlProfil@(j.Partie.Joueurs.ElementAt(6).Invocateur.ImageProfil).png">
-                                            <span class="playerName">@j.Partie.Joueurs.ElementAt(6).Invocateur.Name</span>
-                                        </div>
-                                        <div class="player txt1">
-                                            <img title="@j.Partie.Joueurs.ElementAt(7).Invocateur.Name" 
-                                                 src="@urlProfil@(j.Partie.Joueurs.ElementAt(7).Invocateur.ImageProfil).png">
-                                            <span class="playerName">@j.Partie.Joueurs.ElementAt(7).Invocateur.Name</span>
-                                        </div>
-                                        <div class="player txt1">
-                                            <img title="@j.Partie.Joueurs.ElementAt(8).Invocateur.Name" 
-                                                 src="@urlProfil@(j.Partie.Joueurs.ElementAt(8).Invocateur.ImageProfil).png">
-                                            <span class="playerName">@j.Partie.Joueurs.ElementAt(8).Invocateur.Name</span>
-                                        </div>
-                                        <div class="player txt1">
-                                            <img title="@j.Partie.Joueurs.ElementAt(9).Invocateur.Name" 
-                                                 src="@urlProfil@(j.Partie.Joueurs.ElementAt(9).Invocateur.ImageProfil).png">
-                                            <span class="playerName">@j.Partie.Joueurs.ElementAt(9).Invocateur.Name</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                }
-            </div>
-        </div>
+
+    </div>
+    <div class="row ongletContainer" id="statistiques" style="display:none">
+        @Html.Partial("_UserStats",Model.DernieresParties)
+    </div>
+
+    <div id="maitrise" class="row ongletContainer">
+        @Html.Partial("_UserMaitrise",Model.Maitrises)
     </div>
 </div>
 @section scripts{
@@ -442,6 +314,16 @@
 
             }
 
+        });
+
+        $(".onglet").click(function () {
+            //Affichage onglet
+            $(".onglet").removeClass("active");
+            $(this).addClass("active");
+
+            //Gestion fenêtre
+            $(".ongletContainer").hide();
+            $("#" + $(this).attr("data-target")).show();
         });
     </script>
 

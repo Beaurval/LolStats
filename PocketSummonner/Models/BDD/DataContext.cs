@@ -1,4 +1,5 @@
 ﻿using PocketSummonner.Migrations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Entity;
 
 namespace PocketSummonner.Models.BDD
@@ -31,7 +32,6 @@ namespace PocketSummonner.Models.BDD
                     je.MapRightKey("JoueurId");
                     je.ToTable("EquipementJoueur");
                 });
-
 
         }
     }

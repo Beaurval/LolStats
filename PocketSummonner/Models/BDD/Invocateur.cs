@@ -13,6 +13,12 @@ namespace PocketSummonner.Models.BDD
         public int ImageProfil { get; set; }
         public int Niveau { get; set; }
         public string Region { get; set; }
+        public string Tier { get; set; }
+        public string Rank { get; set; }
+        public int LeaguePoints { get; set; }
+        public int Win { get; set; }
+        public int Losses { get; set; }
+
 
         //Relations
         public virtual List<Joueur> Joueurs { get; set; }

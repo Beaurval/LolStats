@@ -1,6 +1,5 @@
 ﻿using Microsoft.Ajax.Utilities;
 using Newtonsoft.Json.Linq;
-using PocketSummonner.Data;
 using PocketSummonner.Helpers;
 using PocketSummonner.Models;
 using PocketSummonner.Models.BDD;
@@ -32,9 +31,6 @@ namespace PocketSummonner.Controllers
         //// GET: Invocateur
         public async Task<ActionResult> Profil(string summonerId)
         {
-            //await SaveToDb.MajSpells(db);
-            //await SaveToDb.MajEquipemment(db);
-            //await SaveToDb.MajChampions(db);
             Invocateur invocateur = new Invocateur();
             //Utilisateur en base ?
             if (db.Invocateurs.Where(x => x.Id == summonerId).Count() > 0)
