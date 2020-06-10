@@ -242,6 +242,7 @@
             cursor:pointer;
         }
     </style>
+    <link href="~/Content/maitrise.css" rel="stylesheet" />
 }
 
 <div class="container ">
@@ -275,7 +276,7 @@
     </div>
 
     <div id="maitrise" class="row ongletContainer">
-        @Html.Partial("_UserMaitrise",Model.Maitrises)
+        @Html.Partial("_UserMaitrise",Model)
     </div>
 </div>
 @section scripts{

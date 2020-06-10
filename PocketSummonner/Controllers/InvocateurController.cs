@@ -7,6 +7,8 @@ using PocketSummonner.Models.Profil;
 using RestSharp;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Drawing.Drawing2D;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -21,30 +23,41 @@ using System.Web.Mvc;
 
 namespace PocketSummonner.Controllers
 {
+    [Authorize]
     public class InvocateurController : Controller
     {
         private string api_key = Properties.Settings.Default.api_key;
         private DataContext db = new DataContext();
+        public ApiCall api;
+        public SaveToDb stdb;
+        private HttpCall call;
 
-        
+        public InvocateurController()
+        {
+            stdb = new SaveToDb(db);
+            call = new HttpCall();
+            api = new ApiCall(db, call);
+        }
 
         //// GET: Invocateur
         public async Task<ActionResult> Profil(string summonerId)
         {
             Invocateur invocateur = new Invocateur();
-            //Utilisateur en base ?
-            if (db.Invocateurs.Where(x => x.Id == summonerId).Count() > 0)
+            List<Maitrise> maitrises = new List<Maitrise>();
+
+            if (await db.Invocateurs.FindAsync(summonerId) == null)
             {
-                invocateur = db.Invocateurs.Where(x => x.Id == summonerId).FirstOrDefault();
+                invocateur = await ApiCall.GetSummoner(summonerId, call, db);
+                db.Invocateurs.Add(invocateur);
             }
-            //Sinon on récupère l'invocateur et on le sauvegarde en base
             else
             {
-                invocateur = await ApiCall.GetSummoner(summonerId);
-                db.Invocateurs.Add(invocateur);
-                db.SaveChanges();
+                invocateur = await db.Invocateurs.FindAsync(summonerId);
+                await db.SaveChangesAsync();
             }
 
+            if (invocateur.Maitrises != null)
+                maitrises = invocateur.Maitrises;
             //On récupère les derniers joueurs que l'invocateur a incarné
             List<Joueur> lastJoueurs = new List<Joueur>();
             //L'utilisateur a des joueurs en base ?
@@ -55,15 +68,24 @@ namespace PocketSummonner.Controllers
             //Sinon on les récupères avec l'api et les stock en base
             else
             {
-                lastJoueurs = await ApiCall.GetGameHistory(invocateur.AccountId,db);
-                db.Joueurs.AddRange(lastJoueurs);
-                db.SaveChanges();
+                List<Joueur> jrs = await api.GetLastGames(invocateur.AccountId);
+                db.Joueurs.AddRange(jrs);
+                await db.SaveChangesAsync();
+                lastJoueurs = jrs;
             }
-                 
-            return View(lastJoueurs);
+
+            return View(new ProfilModel { DernieresParties = lastJoueurs, Maitrises = maitrises });
         }
 
-        public ActionResult Recherche(string name)
+        public async Task<ActionResult> Update(string summId)
+        {
+            ViewBag.SummId = summId;
+            await ApiCall.MajMaitrises(summId, db);
+            return RedirectToAction("Profil",new { summonerId = summId });
+        }
+
+
+        public  ActionResult Recherche(string name)
         {
             ViewBag.name = name;
             return View();

@@ -144,14 +144,18 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\AccueilController.cs" />
+    <Compile Include="Controllers\ApiController.cs" />
     <Compile Include="Controllers\InvocateurController.cs" />
+    <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Helpers\Fonctions.cs" />
     <Compile Include="Helpers\ApiCall.cs" />
+    <Compile Include="Helpers\HttpCall.cs" />
     <Compile Include="Helpers\SaveToDb.cs" />
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Models\AccueilModel.cs" />
     <Compile Include="Models\BDD\Champion.cs" />
     <Compile Include="Models\BDD\DataContext.cs" />
     <Compile Include="Models\BDD\Equipe.cs" />
@@ -161,7 +165,10 @@
     <Compile Include="Models\BDD\Maitrise.cs" />
     <Compile Include="Models\BDD\Partie.cs" />
     <Compile Include="Models\BDD\Sort.cs" />
+    <Compile Include="Models\BDD\User.cs" />
+    <Compile Include="Models\Helpers\Request.cs" />
     <Compile Include="Models\Profil\ProfilModel.cs" />
+    <Compile Include="Models\UserModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -184,6 +191,13 @@
     <Content Include="Content\img\assets\GOLD.png" />
     <Content Include="Content\img\assets\GRANDMASTER.png" />
     <Content Include="Content\img\assets\IRON.png" />
+    <Content Include="Content\img\assets\maitrtise\1.PNG" />
+    <Content Include="Content\img\assets\maitrtise\2.PNG" />
+    <Content Include="Content\img\assets\maitrtise\3.PNG" />
+    <Content Include="Content\img\assets\maitrtise\4.PNG" />
+    <Content Include="Content\img\assets\maitrtise\5.PNG" />
+    <Content Include="Content\img\assets\maitrtise\6.PNG" />
+    <Content Include="Content\img\assets\maitrtise\7.PNG" />
     <Content Include="Content\img\assets\MASTER.png" />
     <Content Include="Content\img\assets\PLATINIUM.png" />
     <Content Include="Content\img\assets\SILVER.png" />
@@ -199,6 +213,7 @@
     <Content Include="Content\img\ranked\Emblem_master.png" />
     <Content Include="Content\img\ranked\Emblem_platinum.png" />
     <Content Include="Content\img\ranked\Emblem_silver.png" />
+    <Content Include="Content\maitrise.css" />
     <Content Include="Content\profil.css" />
     <Content Include="Content\site.css" />
     <Content Include="Content\themes\base\accordion.css" />
@@ -366,7 +381,7 @@
     <Content Include="Views\Web.config" />
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
-    <Content Include="Views\Shared\_Accueil.cshtml" />
+    <Content Include="Views\Shared\_NotConnected.cshtml" />
     <Content Include="Views\Accueil\Index.cshtml" />
     <Content Include="Scripts\umd\popper.min.js.map" />
     <Content Include="Scripts\umd\popper.js.map" />
@@ -383,6 +398,8 @@
     <Content Include="Views\Invocateur\Profil.cshtml" />
     <Content Include="Views\Shared\_UserStats.cshtml" />
     <Content Include="Views\Shared\_UserMaitrise.cshtml" />
+    <Content Include="Views\Login\Login.cshtml" />
+    <Content Include="Views\Login\Inscription.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

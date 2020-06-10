@@ -10,26 +10,17 @@ using System.Web;
 
 namespace PocketSummonner.Helpers
 {
-    public static class SaveToDb
+    public class SaveToDb
     {
+        private DataContext db;
 
-
-        public static Invocateur SaveInvocateur(Invocateur i, DataContext db)
+        public SaveToDb(DataContext context)
         {
-            //Si l'invocateur n'existe pas
-            if (!db.Invocateurs.Select(x => x.Id).Contains(i.Id))
-            {
-                db.Invocateurs.Add(i);
-                db.SaveChanges();
-            }
-            else
-                i = db.Invocateurs.Find(i.Id);
-
-            return i;
+            this.db = context;
         }
 
 
-        public async static Task MajSpells(DataContext db)
+        public async Task MajSpells()
         {
             using (var transaction = db.Database.BeginTransaction())
             {
@@ -58,7 +49,7 @@ namespace PocketSummonner.Helpers
                 transaction.Commit();
             }
         }
-        public async static Task MajEquipemment(DataContext db)
+        public async Task MajEquipemment()
         {
             using (var transaction = db.Database.BeginTransaction())
             {
