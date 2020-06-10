@@ -48,3 +48,43 @@ form.example::after {
     clear: both;
     display: table;
 }
+
+.container-pres {
+    display: flex;
+    flex-direction: row;
+    padding-left: 100px;
+}
+
+.presentoir:not(:last-child)
+{
+    border-right: 1px solid grey;
+}
+.presentoir {
+    margin-top: 40px;
+    
+    width: 300px;
+    margin-left: 20px;
+}
+.presentoir > i {
+    font-size: 4em;
+}
+.presentoir > span{
+    font-size: 1.5em;
+    font-weight: bold;
+    color: #808080;
+    margin-left: 10px;
+    vertical-align: top;
+    
+}
+.description{
+    font-size: 0.9em !important;
+    position: relative;
+    left: 85px;
+    top: -35px;
+    color: lightgrey !important;
+    font-style: italic;
+}
+
+.borderless td, .borderless th {
+    border: none;
+}

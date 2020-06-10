@@ -1,0 +1,71 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title</title>
+
+    @Styles.Render("~/Content/css")
+    @RenderSection("styles", required: false)
+    <link href="~/Content/Accueil.css" rel="stylesheet" />
+    <script src="https://kit.fontawesome.com/37f1613248.js" crossorigin="anonymous"></script>
+    <style>
+        .links {
+            position: absolute;
+            display: flex;
+            flex-direction: row;
+            justify-content: flex-end;
+            z-index: 555;
+            top: 0;
+            right: 200px;
+        }
+
+            .links > div {
+                padding: 10px 5px 10px 5px;
+                background-color: rgba(34, 34, 34, 0.55);
+            }
+
+                .links > div > a {
+                    color: white;
+                }
+
+                .links > div > i {
+                    text-align: center;
+                    display: block;
+                    width: 100%;
+                    font-size: 1.5em;
+                    color: white;
+                }
+
+            .links > div:hover {
+                background-color: rgba(29, 29, 29, 0.85);
+            }
+    </style>
+</head>
+<body>
+
+
+    <div class="links">
+        <div>
+            <i class="fa fa-lock"></i>
+            <a class="nav-link" href="@Url.Action("Login","Login")">Connexion</a>
+        </div>
+
+        <div>
+            <i class="fas fa-sign-in-alt"></i>
+            <a class="nav-link" href="@Url.Action("Inscription","Login")">Inscription</a>
+        </div>
+    </div>
+
+    <div class="container-fluid p-0 body-content">
+        @RenderBody()
+    </div>
+
+
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+</body>
+</html>

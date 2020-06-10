@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Web;
 
@@ -18,9 +20,11 @@ namespace PocketSummonner.Models.BDD
         public int LeaguePoints { get; set; }
         public int Win { get; set; }
         public int Losses { get; set; }
+        public DateTime DateAjout { get; set; }
 
 
         //Relations
         public virtual List<Joueur> Joueurs { get; set; }
+        public virtual List<Maitrise> Maitrises { get; set; }
     }
 }

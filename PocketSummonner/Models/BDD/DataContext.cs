@@ -17,6 +17,7 @@ namespace PocketSummonner.Models.BDD
         public DbSet<Partie> Parties { get; set; }
         public DbSet<Joueur> Joueurs { get; set; }
         public DbSet<Sort> Sorts { get; set; }
+        public DbSet<Maitrise> Maitrises { get; set; }
 
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
@@ -34,5 +35,7 @@ namespace PocketSummonner.Models.BDD
                 });
 
         }
+
+        public System.Data.Entity.DbSet<PocketSummonner.Models.BDD.User> Users { get; set; }
     }
 }

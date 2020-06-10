@@ -1,18 +1,54 @@
-﻿
-<div class="col-4">
-    <div class="card">
-        <div class="card-body">
+﻿@using PocketSummonner.Models.Profil
+@using PocketSummonner.Models.BDD
 
+@model ProfilModel
+
+@if (Model.Maitrises.Count > 0)
+{
+    <div class="col-xl-4 col-md-12">
+        <div class="card">
+            <div class="card-body text-warning">
+                <h2 class="text-center">@Model.Maitrises.Sum(x => x.Niveau)</h2>
+                <h3 class="text-center" style="color: lightgrey">Score de maitrise total</h3>
+            </div>
         </div>
     </div>
-</div>
-<div class="col-8">
-    <div class="card">
-        <div class="card-header">
+    <div class="col-xl-8 col-md-12">
+        <div class="card">
+            <div class="card-header">
 
-        </div>
-        <div class="card-body">
-
+            </div>
+            <div class="card-body maitrise-container">
+                @foreach (Maitrise m in Model.Maitrises)
+                {
+                    <div class="splash">
+                        <div class="splash-header">
+                            <img src="@m.Champion.Splash" />
+                        </div>
+                        <div class="splash-body">
+                            <img src="~/Content/img/assets/maitrtise/@(m.Niveau).png" />
+                            <span>
+                                @if (m.XpRestanteProchainNiveau > 0)
+                                {
+                                    <i class="fa fa-plus mr-1"></i>
+                                    <strong style="color: lightgrey">@(m.ChampionXp)</strong> @("/") <strong style="color: gold">@(m.XpRestanteProchainNiveau + m.ChampionXp)</strong>
+                                }
+                                else
+                                {
+                                    <span>Xp max</span>
+                                }
+                            </span>
+                        </div>
+                        <span class="champ-name">@m.Champion.Nom</span>
+                    </div>
+                }
+            </div>
         </div>
     </div>
-</div>
+}
+else
+{
+    <div class="col-12">
+        <a href="@Url.Action("Update","Invocateur",new { summId = Model.DernieresParties.First().Invocateur.Id })" class="text-center btn btn-outline-warning" style="width:300px;margin: auto; display:block">Mettre les maitrises à jour</a>
+    </div>
+}

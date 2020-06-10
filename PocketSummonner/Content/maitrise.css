@@ -1,0 +1,41 @@
+﻿.splash {
+    width: 160px;
+}
+.splash-body, .splash-header{
+    border: 1px solid #2b2a2a;
+}
+.splash-header > img{
+    width: 100%;
+}
+.splash-body > img{
+    position: relative;
+    width: 60px;
+    top: -2px;
+    left: -1px;
+}
+.splash-body > span{
+    position: relative;
+    top: -10px;
+    font-size: 0.6em;
+}
+.splash-body{
+    height: 40px;
+    background-color: rgba(30, 31, 86, 0.45);
+}
+
+.maitrise-container {
+    /*display: flex;
+    flex-wrap:wrap;
+    flex-direction: row;*/
+    display: grid;
+    grid-template-columns: repeat(auto-fill,minmax(160px, 1fr));
+}
+.maitrise-container > *{
+    /*flex: 1 1 160px;*/
+    margin: 20px 5px 20px 5px;
+}
+
+.champ-name{
+    position: relative;
+    left: 65px;
+}
