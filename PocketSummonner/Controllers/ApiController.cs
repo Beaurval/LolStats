@@ -61,6 +61,7 @@ namespace PocketSummonner.Controllers
                     var responseString = new StreamReader(response.GetResponseStream()).ReadToEnd();
 
                     JObject player = JObject.Parse(responseString);
+
                     player["region"] = server;
                     listPlayers.Add(player);
                 }

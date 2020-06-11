@@ -1,0 +1,31 @@
+﻿@using PocketSummonner.Models.BDD
+@model List<UserSawInvocateur>
+@{
+    Layout = null;
+    string urlProfil = "http://ddragon.leagueoflegends.com/cdn/10.11.1/img/profileicon/";
+}
+
+<div class="col-12">
+    <div class="card">
+        <div class="card-header">
+            <h3>Liste des derniers invocateurs que vous avez consulté</h3>
+        </div>
+        <div class="card-body">
+            <table class="table table-borderless text-light table-striped" style="width: 50%; margin: auto;">
+                <tbody>
+                    @foreach (UserSawInvocateur h in Model)
+                    {
+                        <tr>
+                            <td>
+                                <img src="@(urlProfil + h.Invocateur.ImageProfil).png" width="50" class="rounded-circle" />
+                                <a style="color:white;" href="@Url.Action("Profil", "Invocateur", new { summonerId = h.InvocateurId, serveur = h.Invocateur.Region })" class="ml-4">@h.Invocateur.Name</a>
+                            </td>
+                            <td style="vertical-align: middle">Consulté le : @h.DateConsultation.ToShortDateString()</td>
+                        </tr>
+                    }
+                </tbody>
+
+            </table>
+        </div>
+    </div>
+</div>

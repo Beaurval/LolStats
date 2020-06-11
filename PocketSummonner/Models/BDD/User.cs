@@ -12,12 +12,13 @@ namespace PocketSummonner.Models.BDD
         public int Id { get; set; }
         [DisplayName("Nom et prénom")]
         public string UserName { get; set; }
-        [ DisplayName("Mot de passe")]
+        [DataType(DataType.Password), DisplayName("Mot de passe")]
         public string Password { get; set; }
         [DataType(DataType.EmailAddress), DisplayName("E-mail")]
         public string Mail { get; set; }
         [DataType(DataType.PhoneNumber), DisplayName("Téléphone")]
         public string Tel { get; set; }
         public virtual Invocateur invocateur { get; set; }
+        public virtual List<UserSawInvocateur> Historique { get; set; }
     }
 }

@@ -68,7 +68,7 @@ form.example::after {
 .presentoir > i {
     font-size: 4em;
 }
-.presentoir > span{
+.presentoir > .titre{
     font-size: 1.5em;
     font-weight: bold;
     color: #808080;
@@ -76,14 +76,14 @@ form.example::after {
     vertical-align: top;
     
 }
-.description{
-    font-size: 0.9em !important;
-    position: relative;
-    left: 85px;
-    top: -35px;
-    color: lightgrey !important;
-    font-style: italic;
-}
+    .presentoir > .description {
+        font-size: 0.9em !important;
+        position: relative;
+        left: 85px;
+        top: -35px;
+        color: lightgrey !important;
+        font-style: italic;
+    }
 
 .borderless td, .borderless th {
     border: none;

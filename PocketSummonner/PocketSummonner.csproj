@@ -166,6 +166,7 @@
     <Compile Include="Models\BDD\Partie.cs" />
     <Compile Include="Models\BDD\Sort.cs" />
     <Compile Include="Models\BDD\User.cs" />
+    <Compile Include="Models\BDD\UserSawInvocateur.cs" />
     <Compile Include="Models\Helpers\Request.cs" />
     <Compile Include="Models\Profil\ProfilModel.cs" />
     <Compile Include="Models\UserModel.cs" />
@@ -214,6 +215,7 @@
     <Content Include="Content\img\ranked\Emblem_platinum.png" />
     <Content Include="Content\img\ranked\Emblem_silver.png" />
     <Content Include="Content\maitrise.css" />
+    <Content Include="Content\navbar.css" />
     <Content Include="Content\profil.css" />
     <Content Include="Content\site.css" />
     <Content Include="Content\themes\base\accordion.css" />
@@ -400,6 +402,7 @@
     <Content Include="Views\Shared\_UserMaitrise.cshtml" />
     <Content Include="Views\Login\Login.cshtml" />
     <Content Include="Views\Login\Inscription.cshtml" />
+    <Content Include="Views\Shared\_UserHistory.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

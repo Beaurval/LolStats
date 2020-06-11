@@ -18,6 +18,7 @@ namespace PocketSummonner.Models.BDD
         public DbSet<Joueur> Joueurs { get; set; }
         public DbSet<Sort> Sorts { get; set; }
         public DbSet<Maitrise> Maitrises { get; set; }
+        public DbSet<UserSawInvocateur> Vues { get; set; }
 
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
@@ -33,6 +34,15 @@ namespace PocketSummonner.Models.BDD
                     je.MapRightKey("JoueurId");
                     je.ToTable("EquipementJoueur");
                 });
+
+            modelBuilder.Entity<UserSawInvocateur>()
+                .HasKey(ui => new { ui.UserId, ui.InvocateurId });
+
+            modelBuilder.Entity<UserSawInvocateur>()
+                .HasRequired(ui => ui.User).WithMany(i => i.Historique).HasForeignKey(ui => ui.UserId);
+
+            modelBuilder.Entity<UserSawInvocateur>()
+                .HasRequired(ui => ui.Invocateur).WithMany(i => i.ConsulteParUser).HasForeignKey(ui => ui.InvocateurId);
 
         }
 

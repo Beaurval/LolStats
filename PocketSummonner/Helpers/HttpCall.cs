@@ -21,10 +21,7 @@ namespace PocketSummonner.Helpers
 
         public async Task<JObject> HttpGetJObject(string url)
         {
-
-
-
-            System.Diagnostics.Debug.WriteLine("Lancement de la requête numéro : " + nbRequetes);
+            System.Diagnostics.Debug.WriteLine(url);
 
             string content = "";
             HttpClient client = new HttpClient();
@@ -36,7 +33,10 @@ namespace PocketSummonner.Helpers
             {
                 response = await client.GetAsync(url);
                 if (!response.IsSuccessStatusCode)
+                {
                     System.Threading.Thread.Sleep(500);
+                    System.Diagnostics.Debug.WriteLine("Trop de requêtes, on attend ...");
+                }
                 else
                     content = await response.Content.ReadAsStringAsync();
             } while (!response.IsSuccessStatusCode);
@@ -50,7 +50,7 @@ namespace PocketSummonner.Helpers
         {
 
 
-            System.Diagnostics.Debug.WriteLine("Lancement de la requête numéro : " + nbRequetes);
+            System.Diagnostics.Debug.WriteLine(url);
             string content = "";
 
             HttpClient client = new HttpClient();
@@ -62,7 +62,9 @@ namespace PocketSummonner.Helpers
                 response = await client.GetAsync(url);
 
                 if (!response.IsSuccessStatusCode)
-                    System.Threading.Thread.Sleep(500);
+                {
+                    System.Diagnostics.Debug.WriteLine("Trop de requêtes, on attend ..."); System.Threading.Thread.Sleep(500);
+                }
                 else
                     content = await response.Content.ReadAsStringAsync();
             } while (!response.IsSuccessStatusCode);
