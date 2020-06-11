@@ -8,7 +8,6 @@ using System.Web.Mvc;
 
 namespace PocketSummonner.Controllers
 {
-    [Authorize]
     public class AccueilController : Controller
     {
         DataContext db = new DataContext();

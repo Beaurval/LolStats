@@ -9,39 +9,8 @@
     @Styles.Render("~/Content/css")
     @RenderSection("styles", required: false)
     <link href="~/Content/Accueil.css" rel="stylesheet" />
+    <link href="~/Content/navbar.css" rel="stylesheet" />
     <script src="https://kit.fontawesome.com/37f1613248.js" crossorigin="anonymous"></script>
-    <style>
-        .links {
-            position: absolute;
-            display: flex;
-            flex-direction: row;
-            justify-content: flex-end;
-            z-index: 555;
-            top: 0;
-            right: 200px;
-        }
-
-            .links > div {
-                padding: 10px 5px 10px 5px;
-                background-color: rgba(34, 34, 34, 0.55);
-            }
-
-                .links > div > a {
-                    color: white;
-                }
-
-                .links > div > i {
-                    text-align: center;
-                    display: block;
-                    width: 100%;
-                    font-size: 1.5em;
-                    color: white;
-                }
-
-            .links > div:hover {
-                background-color: rgba(29, 29, 29, 0.85);
-            }
-    </style>
 </head>
 <body>
 

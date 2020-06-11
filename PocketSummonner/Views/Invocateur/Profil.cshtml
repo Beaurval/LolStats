@@ -5,6 +5,8 @@
     ViewBag.Title = "Profil";
     string urlProfil = "http://ddragon.leagueoflegends.com/cdn/10.11.1/img/profileicon/";
     Invocateur invocateur = Model.DernieresParties.First().Invocateur;
+
+    PocketSummonner.Helpers.Fonctions utils = new PocketSummonner.Helpers.Fonctions(this.Request);
 }
 
 @section styles{
@@ -254,29 +256,39 @@
         </div>
         <div class="col-4">
             <div class="mb-2"><span class="profilName">@invocateur.Name</span></div>
-            <div><span class="btn btn-success rounded-pill">@invocateur.Region</span></div>
+            <div><span class="btn btn-success rounded-pill">@invocateur.Region.ToUpper()</span></div>
         </div>
     </div>
     <div class="row">
         <div class="col-12 mb-3">
             <ul class="nav nav-tabs navigation">
                 <li class="nav-item">
-                    <a class="nav-link onglet " data-target="statistiques">Statistiques</a>
+                    <a class="nav-link onglet active" data-target="statistiques">Statistiques</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link onglet active" data-target="maitrise">Maitrise</a>
+                    <a class="nav-link onglet " data-target="maitrise">Maitrise</a>
                 </li>
+                @if (utils.CurrentUser().invocateur.Id == Model.DernieresParties.First().Invocateur.Id)
+                {
+                    <li class="nav-item">
+                        <a class="nav-link onglet" data-target="history">Derniers invocateurs consultés</a>
+                    </li>
+                }
+
             </ul>
         </div>
 
 
     </div>
-    <div class="row ongletContainer" id="statistiques" style="display:none">
+    <div class="row ongletContainer" id="statistiques" >
         @Html.Partial("_UserStats",Model.DernieresParties)
     </div>
 
-    <div id="maitrise" class="row ongletContainer">
+    <div id="maitrise" class="row ongletContainer" style="display:none">
         @Html.Partial("_UserMaitrise",Model)
+    </div>
+    <div id="history" class="row ongletContainer" style="display:none">
+        @Html.Partial("_UserHistory", Model.History)
     </div>
 </div>
 @section scripts{

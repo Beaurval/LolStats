@@ -10,5 +10,6 @@ namespace PocketSummonner.Models.Profil
     {
         public List<Joueur> DernieresParties { get; set; }
         public List<Maitrise> Maitrises { get; set; }
+        public List<UserSawInvocateur> History { get; set; }
     }
 }

@@ -15,18 +15,19 @@ namespace PocketSummonner.Helpers
         private static string api_key = Properties.Settings.Default.api_key;
         private DataContext db;
         private HttpCall call;
+
         public ApiCall(DataContext context,HttpCall caller)
         {
             this.db = context;
-            call = caller;
+            call = caller; 
         }
 
-        public static async Task<Invocateur> GetSummoner(string summonerId, HttpCall call, DataContext db)
+        public static async Task<Invocateur> GetSummoner(string summonerId,string serveur, HttpCall call, DataContext db)
         {
             Invocateur invocateur = new Invocateur();
 
-            JArray rankedInfo = await call.HttpGetJArray("https://euw1.api.riotgames.com/lol/league/v4/entries/by-summoner/" + summonerId);
-            JObject jsonInvocateur = await call.HttpGetJObject("https://euw1.api.riotgames.com/lol/summoner/v4/summoners/" + summonerId);
+            JArray rankedInfo = await call.HttpGetJArray("https://" + serveur  + ".api.riotgames.com/lol/league/v4/entries/by-summoner/" + summonerId);
+            JObject jsonInvocateur = await call.HttpGetJObject("https://" + serveur + ".api.riotgames.com/lol/summoner/v4/summoners/" + summonerId);
 
             invocateur = new Invocateur
             {
@@ -35,7 +36,7 @@ namespace PocketSummonner.Helpers
                 Name = jsonInvocateur["name"].ToString(),
                 ImageProfil = Int32.Parse(jsonInvocateur["profileIconId"].ToString()),
                 Niveau = Int32.Parse(jsonInvocateur["summonerLevel"].ToString()),
-                Region = "EUW1",
+                Region = serveur,
                 DateAjout = DateTime.Now,
                 Joueurs = new List<Joueur>()
             };
@@ -75,19 +76,19 @@ namespace PocketSummonner.Helpers
         }
 
 
-        public async Task<List<Joueur>> GetLastGames(string accountId)
+        public async Task<List<Joueur>> GetLastGames(string accountId,string serveur)
         {
             List<Joueur> history = new List<Joueur>();
 
 
-            string urlMatchList = "https://euw1.api.riotgames.com/lol/match/v4/matchlists/by-account/" + accountId + "?endIndex=5";
+            string urlMatchList = "https://" + serveur + ".api.riotgames.com/lol/match/v4/matchlists/by-account/" + accountId + "?endIndex=5";
             JObject jsonMatchList = await call.HttpGetJObject(urlMatchList);
 
             List<Task<JObject>> tasks = new List<Task<JObject>>();
             foreach (JObject match in (JArray)jsonMatchList["matches"])
             {
                
-                string urlInfoPartie = "https://euw1.api.riotgames.com/lol/match/v4/matches/"
+                string urlInfoPartie = "https://" + serveur + ".api.riotgames.com/lol/match/v4/matches/"
                     + match["gameId"].ToString();
                 //Info de la partie
                 Task<JObject> task = call.HttpGetJObject(urlInfoPartie);
@@ -101,7 +102,7 @@ namespace PocketSummonner.Helpers
 
                 JObject matchInfo = await firstFinishedTask;
 
-                Joueur j = await ConvertJsonGame(matchInfo, accountId, db);
+                Joueur j = await ConvertJsonGame(matchInfo, accountId,serveur, db);
 
                 history.Add(j);
             }
@@ -109,7 +110,9 @@ namespace PocketSummonner.Helpers
             return history;
         }
 
-        public async Task<Joueur> ConvertJsonGame(JObject jsonMatch, string accountId, DataContext db)
+        
+
+        public async Task<Joueur> ConvertJsonGame(JObject jsonMatch, string accountId,string serveur, DataContext db)
         {
             Joueur joueur = new Joueur();
             Partie partie = new Partie();
@@ -129,7 +132,7 @@ namespace PocketSummonner.Helpers
 
                 string invocateurId = playersIdentities["player"]["summonerId"].ToString();
 
-                j.Invocateur = await SetInvocateur(invocateurId, partie.Joueurs);
+                j.Invocateur = await SetInvocateur(invocateurId,serveur, partie.Joueurs);
 
                 //Récupération des stats
                 foreach (JObject playersStats in (JArray)jsonMatch["participants"])
@@ -187,12 +190,12 @@ namespace PocketSummonner.Helpers
             return joueur;
         }
 
-        public async Task<Invocateur> SetInvocateur(string id, List<Joueur> pendingJoueurs)
+        public async Task<Invocateur> SetInvocateur(string id,string serveur, List<Joueur> pendingJoueurs)
         {
             Invocateur invocateur;
             if(pendingJoueurs.Where(x => x.Invocateur.Id == id).Count() == 0 && await db.Invocateurs.FindAsync(id) == null)
             {
-                invocateur = await GetSummoner(id, call, db);
+                invocateur = await GetSummoner(id,serveur, call, db);
                 db.Invocateurs.Add(invocateur);
                 await db.SaveChangesAsync();
             }
@@ -294,9 +297,10 @@ namespace PocketSummonner.Helpers
         {
             List<Maitrise> maitrises = new List<Maitrise>();
             HttpClient client = new HttpClient();
+            Invocateur i = db.Invocateurs.Find(sumId);
             client.DefaultRequestHeaders.Add("X-Riot-Token", api_key);
 
-            var response = await client.GetAsync("https://euw1.api.riotgames.com/lol/champion-mastery/v4/champion-masteries/by-summoner/" + sumId);
+            var response = await client.GetAsync("https://" + i.Region.ToLower() + ".api.riotgames.com/lol/champion-mastery/v4/champion-masteries/by-summoner/" + sumId);
 
             if (response.IsSuccessStatusCode)
             {

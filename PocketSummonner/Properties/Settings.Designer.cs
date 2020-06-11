@@ -25,7 +25,7 @@ namespace PocketSummonner.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("RGAPI-52967b75-9640-4cc1-bf0f-142e4268d39a")]
+        [global::System.Configuration.DefaultSettingValueAttribute("RGAPI-2b3cff9d-c93f-42a9-9ae6-0ff6eaaa653e")]
         public string api_key {
             get {
                 return ((string)(this["api_key"]));

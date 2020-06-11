@@ -4,7 +4,15 @@
     /**/
     string urlProfil = "http://ddragon.leagueoflegends.com/cdn/10.11.1/img/profileicon/";
     ViewBag.Title = "Accueil";
-    Layout = "~/Views/Shared/_NotConnected.cshtml";
+    if (User.Identity.IsAuthenticated)
+    {
+        Layout = "~/Views/Shared/_Layout.cshtml";
+    }
+    else
+    {
+        Layout = "~/Views/Shared/_NotConnected.cshtml";
+    }
+
 }
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <link href="~/Content/homepage.css" rel="stylesheet" />
@@ -24,18 +32,18 @@
         <div class="col-12 container-pres">
             <div class="presentoir">
                 <i class="fas fa-users"></i>
-                <span>Invocateurs</span><br />
-                <span class="description">Rechercher, ajouter</span>
+                <span  class="titre">Invocateurs</span><br />
+                <span style="margin-left: 10px;"  class="description">Rechercher, ajouter</span>
             </div>
             <div class="presentoir">
                 <i class="fas fa-history"></i>
-                <span>Historique</span><br />
-                <span class="description">Dernières parties</span>
+                <span class="titre">Historique</span><br />
+                <span style="margin-left: -5px;"class="description">Dernières parties</span>
             </div>
             <div class="presentoir">
                 <i class="fas fa-chart-line"></i>
-                <span>Maitrise</span><br />
-                <span class="description">Consulter son avancée</span>
+                <span class="titre">Maitrise</span><br />
+                <span style="margin-left: -5px;" class="description">Consulter son avancée</span>
             </div>
         </div>
     </div>
@@ -43,12 +51,12 @@
         <div class="col-6">
 
             <table class="table table-borderless table-striped" width="100%">
-                <caption class="border-bottom" style="caption-side: top;margin-bottom: 10px;">Derniers joueurs consultés</caption>
+                <caption class="border-bottom" style="caption-side: top;margin-bottom: 10px;">Derniers joueurs enregistrés</caption>
                 @foreach (Invocateur inv in Model.lastInvocateeur)
                 {
                     <tr style="padding: 10px; border: none !important;">
                         <td class="borderless"><img src="@(urlProfil + inv.ImageProfil + ".png")" width="40" class="rounded-circle" /></td>
-                        <td style="vertical-align: top; line-height: 18px;">@inv.Name <br /><strong class="text-secondary">@inv.Region</strong></td>
+                        <td style="vertical-align: top; line-height: 18px;"><a style="color: black;" href="@Url.Action("Profil", "Invocateur", new { summonerId = inv.Id, serveur = inv.Region })">@inv.Name</a> <br /><strong class="text-secondary">@inv.Region.ToUpper()</strong></td>
                         <td>@(inv.Tier != null ? inv.Tier + " " + inv.Rank : "UNRANKED")</td>
                     </tr>
                 }
@@ -62,7 +70,7 @@
                 {
                     <tr style="padding: 10px; border: none !important;">
                         <td class="borderless"><img src="@(urlProfil + inv.ImageProfil + ".png")" width="40" class="rounded-circle" /></td>
-                        <td style="vertical-align: top; line-height: 18px;">@inv.Name <br /><strong class="text-secondary">@inv.Region</strong></td>
+                        <td style="vertical-align: top; line-height: 18px;"><a style="color: black;" href="@Url.Action("Profil", "Invocateur", new { summonerId = inv.Id, serveur = inv.Region })">@inv.Name</a> <br /><strong class="text-secondary">@inv.Region.ToUpper()</strong></td>
                         <td style="vertical-align: top; line-height: 18px;">@inv.Maitrises.Sum(x => x.Niveau) <br /><strong class="text-secondary">Points de maitrise</strong></td>
                     </tr>
                 }
